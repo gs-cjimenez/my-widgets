@@ -122,6 +122,81 @@
       "imageSrc": "widgets/card_grid/thumbnail.png"
     },
     {
+      "type": "event_banner",
+      "title": "Event Banner",
+      "version": "1.0.0",
+      "description": "A full-width event promotion banner with configurable title, description, CTA button, background color, image, and badge.",
+      "category": "widgets",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/event_banner",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          {
+            "name": "title",
+            "type": "text",
+            "label": "Event Title",
+            "defaultValue": "Ask Microsoft Anything: The Microsoft Sentinel SIEM Migration Experience on June 23"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "label": "Description",
+            "defaultValue": "Join us for a live demo and AMA on the Microsoft Sentinel SIEM migration experience. We'll cover what it does today, how it works, and the questions customers ask most, then open it up for live Q&A."
+          },
+          {
+            "name": "buttonText",
+            "type": "text",
+            "label": "Button Text",
+            "defaultValue": "RSVP Here"
+          },
+          {
+            "name": "buttonUrl",
+            "type": "text",
+            "label": "Button URL",
+            "defaultValue": "https://techcommunity.microsoft.com/event/microsoft-security-events/ask-microsoft-anything-the-microsoft-sentinel-siem-migration-experience/4521635"
+          },
+          {
+            "name": "backgroundColor",
+            "type": "color",
+            "label": "Background Color",
+            "defaultValue": "#0078D4"
+          },
+          {
+            "name": "imageUrl",
+            "type": "text",
+            "label": "Image URL (leave blank to hide)",
+            "defaultValue": ""
+          },
+          {
+            "name": "badgeText",
+            "type": "text",
+            "label": "Badge Text (leave blank to hide)",
+            "defaultValue": "#Event"
+          }
+        ]
+      },
+      "defaultConfig": {
+        "title": "Ask Microsoft Anything: The Microsoft Sentinel SIEM Migration Experience on June 23",
+        "description": "Join us for a live demo and AMA on the Microsoft Sentinel SIEM migration experience. We'll cover what it does today, how it works, and the questions customers ask most, then open it up for live Q&A.",
+        "buttonText": "RSVP Here",
+        "buttonUrl": "https://techcommunity.microsoft.com/event/microsoft-security-events/ask-microsoft-anything-the-microsoft-sentinel-siem-migration-experience/4521635",
+        "backgroundColor": "#0078D4",
+        "imageUrl": "",
+        "badgeText": "#Event"
+      }
+    },
+    {
       "category": "Demo",
       "containers": [
         "Full width"
