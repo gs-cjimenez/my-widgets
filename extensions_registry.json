@@ -220,6 +220,46 @@
       "imageSrc": "widgets/demo_widget/thumbnail.png"
     },
     {
+      "type": "meet_the_community",
+      "title": "Meet the Community",
+      "version": "1.0.0",
+      "description": "A carousel showcasing featured community members with their profile, expertise, and favorite community moments.",
+      "category": "Demo",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/meet_the_community",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          {
+            "name": "heading",
+            "type": "text",
+            "label": "Section Heading",
+            "defaultValue": "Meet the community"
+          },
+          {
+            "name": "members_json",
+            "type": "text",
+            "label": "Members JSON (array of member objects — leave blank to use built-in placeholders)",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "defaultConfig": {
+        "heading": "Meet the community",
+        "members_json": ""
+      }
+    },
+    {
       "category": "Demo",
       "configuration": {
         "properties": [
