@@ -63,24 +63,28 @@ function buildCard(member) {
   left.className = 'card-left';
   left.style.background = member.card_color || '#e0f2fe';
 
+  const avatarWrap = document.createElement('div');
+  avatarWrap.className = 'avatar-wrap';
+
   if (member.avatar) {
     const img = document.createElement('img');
-    img.className = 'avatar';
     img.src = member.avatar;
     img.alt = member.name;
     img.onerror = () => {
       const ph = document.createElement('div');
-      ph.className = 'avatar-placeholder';
+      ph.className = 'avatar-initials';
       ph.textContent = initials(member.name);
-      img.replaceWith(ph);
+      avatarWrap.innerHTML = '';
+      avatarWrap.appendChild(ph);
     };
-    left.appendChild(img);
+    avatarWrap.appendChild(img);
   } else {
     const ph = document.createElement('div');
-    ph.className = 'avatar-placeholder';
+    ph.className = 'avatar-initials';
     ph.textContent = initials(member.name);
-    left.appendChild(ph);
+    avatarWrap.appendChild(ph);
   }
+  left.appendChild(avatarWrap);
 
   const nameEl = document.createElement('div');
   nameEl.className = 'member-name';
@@ -96,17 +100,16 @@ function buildCard(member) {
   right.className = 'card-right';
 
   const fields = document.createElement('div');
+  fields.className = 'fields';
 
   if (member.ask_me_about) {
     const b1 = document.createElement('div');
-    b1.className = 'field-block';
     b1.innerHTML = `<div class="field-label">Ask me about:</div><div class="field-value">${member.ask_me_about}</div>`;
     fields.appendChild(b1);
   }
 
   if (member.favorite_part) {
     const b2 = document.createElement('div');
-    b2.className = 'field-block';
     b2.innerHTML = `<div class="field-label">My favorite part about the community is:</div><div class="field-value">${member.favorite_part}</div>`;
     fields.appendChild(b2);
   }
