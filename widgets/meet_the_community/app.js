@@ -142,19 +142,29 @@ export async function init(sdk) {
     return Math.max(1, Math.ceil(members.length / CARDS_PER_PAGE));
   }
 
+  function membersFromProps(props) {
+    const slots = [1, 2, 3, 4, 5];
+    const out = [];
+    for (const i of slots) {
+      const name = props[`m${i}_name`];
+      if (!name || !name.trim()) continue;
+      out.push({
+        name,
+        username: props[`m${i}_username`] || '',
+        company: props[`m${i}_company`] || '',
+        location: props[`m${i}_location`] || '',
+        avatar: props[`m${i}_avatar`] || '',
+        card_color: props[`m${i}_card_color`] || '#e0f2fe',
+        ask_me_about: props[`m${i}_ask_me_about`] || '',
+        favorite_part: props[`m${i}_favorite_part`] || ''
+      });
+    }
+    return out.length > 0 ? out : DEFAULT_MEMBERS;
+  }
+
   function render(props) {
     if (heading) heading.textContent = props.heading || 'Meet the community';
-
-    let parsed = DEFAULT_MEMBERS;
-    if (props.members_json && props.members_json.trim()) {
-      try {
-        const raw = JSON.parse(props.members_json);
-        if (Array.isArray(raw) && raw.length > 0) parsed = raw;
-      } catch (e) {
-        // keep defaults on bad JSON
-      }
-    }
-    members = parsed;
+    members = membersFromProps(props);
 
     // Rebuild track
     track.innerHTML = '';

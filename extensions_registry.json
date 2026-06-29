@@ -224,7 +224,7 @@
       "title": "Meet the Community",
       "version": "1.0.0",
       "description": "A carousel showcasing featured community members with their profile, expertise, and favorite community moments.",
-      "category": "Demo",
+      "category": "widgets",
       "containers": ["Full width"],
       "widgetsLibrary": true,
       "settings": {
@@ -240,23 +240,56 @@
       },
       "configuration": {
         "properties": [
-          {
-            "name": "heading",
-            "type": "text",
-            "label": "Section Heading",
-            "defaultValue": "Meet the community"
-          },
-          {
-            "name": "members_json",
-            "type": "text",
-            "label": "Members JSON (array of member objects — leave blank to use built-in placeholders)",
-            "defaultValue": ""
-          }
+          { "name": "heading", "type": "text", "label": "Section Heading", "defaultValue": "Meet the community" },
+          { "name": "m1_name", "type": "text", "label": "Member 1 — Name", "defaultValue": "Michael" },
+          { "name": "m1_username", "type": "text", "label": "Member 1 — Username", "defaultValue": "@Twiggy" },
+          { "name": "m1_company", "type": "text", "label": "Member 1 — Company", "defaultValue": "TWIG MICHAEL POOLEY FLOWERS" },
+          { "name": "m1_location", "type": "text", "label": "Member 1 — Location", "defaultValue": "UK" },
+          { "name": "m1_avatar", "type": "text", "label": "Member 1 — Avatar URL (optional)", "defaultValue": "" },
+          { "name": "m1_card_color", "type": "color", "label": "Member 1 — Card Color", "defaultValue": "#d0e8f5" },
+          { "name": "m1_ask_me_about", "type": "text", "label": "Member 1 — Ask me about", "defaultValue": "Retail, online, local delivery, merchandising, meta - google linked UK" },
+          { "name": "m1_favorite_part", "type": "text", "label": "Member 1 — Favorite part about the community", "defaultValue": "The Identity groups Square Champions and the UK product boards." },
+          { "name": "m2_name", "type": "text", "label": "Member 2 — Name", "defaultValue": "Jess" },
+          { "name": "m2_username", "type": "text", "label": "Member 2 — Username", "defaultValue": "@JessPoynter" },
+          { "name": "m2_company", "type": "text", "label": "Member 2 — Company", "defaultValue": "JESS POYNTER STYLE & SOLUTIONS" },
+          { "name": "m2_location", "type": "text", "label": "Member 2 — Location", "defaultValue": "BOTHELL, WA" },
+          { "name": "m2_avatar", "type": "text", "label": "Member 2 — Avatar URL (optional)", "defaultValue": "" },
+          { "name": "m2_card_color", "type": "color", "label": "Member 2 — Card Color", "defaultValue": "#f5c842" },
+          { "name": "m2_ask_me_about", "type": "text", "label": "Member 2 — Ask me about", "defaultValue": "Beauty businesses, marketing, solopreneurship, Square hardware, reporting, Square online, Payroll" },
+          { "name": "m2_favorite_part", "type": "text", "label": "Member 2 — Favorite part about the community", "defaultValue": "Innovating and connecting with other entrepreneurs" },
+          { "name": "m3_name", "type": "text", "label": "Member 3 — Name", "defaultValue": "Aria" },
+          { "name": "m3_username", "type": "text", "label": "Member 3 — Username", "defaultValue": "@AriaChen" },
+          { "name": "m3_company", "type": "text", "label": "Member 3 — Company", "defaultValue": "ARIA CHEN CONSULTING" },
+          { "name": "m3_location", "type": "text", "label": "Member 3 — Location", "defaultValue": "SAN FRANCISCO, CA" },
+          { "name": "m3_avatar", "type": "text", "label": "Member 3 — Avatar URL (optional)", "defaultValue": "" },
+          { "name": "m3_card_color", "type": "color", "label": "Member 3 — Card Color", "defaultValue": "#d1fae5" },
+          { "name": "m3_ask_me_about", "type": "text", "label": "Member 3 — Ask me about", "defaultValue": "E-commerce, product strategy, community building, and scaling small businesses" },
+          { "name": "m3_favorite_part", "type": "text", "label": "Member 3 — Favorite part about the community", "defaultValue": "The depth of knowledge members share and the genuine support for one another." },
+          { "name": "m4_name", "type": "text", "label": "Member 4 — Name", "defaultValue": "Marcus" },
+          { "name": "m4_username", "type": "text", "label": "Member 4 — Username", "defaultValue": "@MarcusReed" },
+          { "name": "m4_company", "type": "text", "label": "Member 4 — Company", "defaultValue": "REED CREATIVE STUDIOS" },
+          { "name": "m4_location", "type": "text", "label": "Member 4 — Location", "defaultValue": "AUSTIN, TX" },
+          { "name": "m4_avatar", "type": "text", "label": "Member 4 — Avatar URL (optional)", "defaultValue": "" },
+          { "name": "m4_card_color", "type": "color", "label": "Member 4 — Card Color", "defaultValue": "#ede9fe" },
+          { "name": "m4_ask_me_about", "type": "text", "label": "Member 4 — Ask me about", "defaultValue": "Branding, creative services, Square for Retail, and social media marketing" },
+          { "name": "m4_favorite_part", "type": "text", "label": "Member 4 — Favorite part about the community", "defaultValue": "Finding peers who get the day-to-day realities of running a creative business." },
+          { "name": "m5_name", "type": "text", "label": "Member 5 — Name", "defaultValue": "Sofia" },
+          { "name": "m5_username", "type": "text", "label": "Member 5 — Username", "defaultValue": "@SofiaM" },
+          { "name": "m5_company", "type": "text", "label": "Member 5 — Company", "defaultValue": "SOFIA'S KITCHEN & CO." },
+          { "name": "m5_location", "type": "text", "label": "Member 5 — Location", "defaultValue": "MIAMI, FL" },
+          { "name": "m5_avatar", "type": "text", "label": "Member 5 — Avatar URL (optional)", "defaultValue": "" },
+          { "name": "m5_card_color", "type": "color", "label": "Member 5 — Card Color", "defaultValue": "#fee2e2" },
+          { "name": "m5_ask_me_about", "type": "text", "label": "Member 5 — Ask me about", "defaultValue": "Food & beverage, Square for Restaurants, loyalty programs, and local marketing" },
+          { "name": "m5_favorite_part", "type": "text", "label": "Member 5 — Favorite part about the community", "defaultValue": "The product boards — knowing my feedback actually shapes the roadmap." }
         ]
       },
       "defaultConfig": {
         "heading": "Meet the community",
-        "members_json": ""
+        "m1_name": "Michael", "m1_username": "@Twiggy", "m1_company": "TWIG MICHAEL POOLEY FLOWERS", "m1_location": "UK", "m1_avatar": "", "m1_card_color": "#d0e8f5", "m1_ask_me_about": "Retail, online, local delivery, merchandising, meta - google linked UK", "m1_favorite_part": "The Identity groups Square Champions and the UK product boards.",
+        "m2_name": "Jess", "m2_username": "@JessPoynter", "m2_company": "JESS POYNTER STYLE & SOLUTIONS", "m2_location": "BOTHELL, WA", "m2_avatar": "", "m2_card_color": "#f5c842", "m2_ask_me_about": "Beauty businesses, marketing, solopreneurship, Square hardware, reporting, Square online, Payroll", "m2_favorite_part": "Innovating and connecting with other entrepreneurs",
+        "m3_name": "Aria", "m3_username": "@AriaChen", "m3_company": "ARIA CHEN CONSULTING", "m3_location": "SAN FRANCISCO, CA", "m3_avatar": "", "m3_card_color": "#d1fae5", "m3_ask_me_about": "E-commerce, product strategy, community building, and scaling small businesses", "m3_favorite_part": "The depth of knowledge members share and the genuine support for one another.",
+        "m4_name": "Marcus", "m4_username": "@MarcusReed", "m4_company": "REED CREATIVE STUDIOS", "m4_location": "AUSTIN, TX", "m4_avatar": "", "m4_card_color": "#ede9fe", "m4_ask_me_about": "Branding, creative services, Square for Retail, and social media marketing", "m4_favorite_part": "Finding peers who get the day-to-day realities of running a creative business.",
+        "m5_name": "Sofia", "m5_username": "@SofiaM", "m5_company": "SOFIA'S KITCHEN & CO.", "m5_location": "MIAMI, FL", "m5_avatar": "", "m5_card_color": "#fee2e2", "m5_ask_me_about": "Food & beverage, Square for Restaurants, loyalty programs, and local marketing", "m5_favorite_part": "The product boards — knowing my feedback actually shapes the roadmap."
       }
     },
     {
