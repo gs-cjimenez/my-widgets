@@ -117,6 +117,12 @@
     line-height: 1;
   }
 
+  .outer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
   @media (max-width: 520px) {
     .banner {
       flex-wrap: wrap;
@@ -129,10 +135,13 @@
     .course-title {
       white-space: normal;
     }
+    .outer {
+      padding: 0 12px;
+    }
   }
 </style>
 
-<div class="banner">
+<div class="outer"><div class="banner">
   <div class="logo-wrap" id="logoWrap">
     <img class="logo-img" id="logoImg" src="" alt="" />
     <span class="logo-fallback" id="logoFallback">
@@ -154,6 +163,6 @@
     <span id="ctaText">Start Learning</span>
     <span class="arrow">→</span>
   </a>
-</div>
+</div></div>
 
 <script type="module" src="app.js"></script>
