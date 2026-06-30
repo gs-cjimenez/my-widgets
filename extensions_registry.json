@@ -1,60 +1,6 @@
 {
   "widgets": [
     {
-      "type": "databricks_learning_path_banner",
-      "title": "Databricks Learning Path Banner",
-      "version": "1.0.0",
-      "description": "A full-width promotional banner for Databricks learning paths and accreditations, with configurable label, title, CTA button text and URL.",
-      "category": "widgets",
-      "containers": ["Full width"],
-      "widgetsLibrary": true,
-      "settings": {
-        "configurable": true,
-        "editable": true,
-        "removable": true,
-        "shared": false,
-        "movable": true
-      },
-      "source": {
-        "path": "widgets/databricks_learning_path_banner",
-        "entry": "index.html"
-      },
-      "configuration": {
-        "properties": [
-          {
-            "name": "label",
-            "type": "text",
-            "label": "Label (e.g. NEW ACCREDITATION)",
-            "defaultValue": "NEW ACCREDITATION"
-          },
-          {
-            "name": "title",
-            "type": "text",
-            "label": "Course Title",
-            "defaultValue": "Analytics Fundamentals"
-          },
-          {
-            "name": "button_text",
-            "type": "text",
-            "label": "Button Text",
-            "defaultValue": "Start Learning"
-          },
-          {
-            "name": "button_url",
-            "type": "text",
-            "label": "Button URL",
-            "defaultValue": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation"
-          }
-        ]
-      },
-      "defaultConfig": {
-        "label": "NEW ACCREDITATION",
-        "title": "Analytics Fundamentals",
-        "button_text": "Start Learning",
-        "button_url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation"
-      }
-    },
-    {
       "category": "Demo",
       "configuration": {
         "properties": [
