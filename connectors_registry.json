@@ -1,0 +1,21 @@
+{
+  "connectors": [
+    {
+      "name": "Spotlight Users",
+      "url": "https://api2-us-west-2.insided.com/user?filter[roles.rolename][]=Spotlight&include[]=roles&limit=50",
+      "method": "GET",
+      "headers": [
+        { "key": "Accept", "value": "application/json", "overridable": false }
+      ],
+      "authentication": {
+        "type": "oauth_client_credentials",
+        "config": {
+          "client_id": "{{ get_secret('cc_id') }}",
+          "client_secret": "{{ get_secret('cc_secret') }}",
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+        }
+      },
+      "permalink": "spotlight-users"
+    }
+  ]
+}

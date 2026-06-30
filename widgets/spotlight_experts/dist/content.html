@@ -1,0 +1,211 @@
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .se-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: #ffffff;
+    padding: 56px 40px;
+  }
+
+  .se-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .se-header__eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7B3FAF;
+    background: #F0E8F8;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .se-header__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2D1248;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .se-header__subtitle {
+    font-size: 16px;
+    color: #6B6B8A;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .se-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .se-card {
+    width: 200px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .se-card {
+    background: #FAFAFA;
+    border: 1px solid #EDE3F7;
+    border-radius: 16px;
+    padding: 28px 20px 24px;
+    text-align: center;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    cursor: default;
+  }
+
+  .se-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(91, 39, 130, 0.12);
+    border-color: #C9A8E8;
+  }
+
+  .se-card__avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    background: linear-gradient(135deg, #7B3FAF 0%, #5B2782 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 3px solid #EDE3F7;
+  }
+
+  .se-card__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .se-card__username {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2D1248;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .se-card__rank {
+    font-size: 12px;
+    color: #7B3FAF;
+    font-weight: 500;
+    margin-bottom: 16px;
+    min-height: 16px;
+  }
+
+  .se-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #7B3FAF 0%, #5B2782 100%);
+    color: #ffffff;
+    padding: 5px 13px;
+    border-radius: 24px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  .se-card__badge-icon {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .se-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: #9C9CB8;
+    font-size: 15px;
+  }
+
+  .se-version {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #C9A8E8;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+  }
+
+  .se-wrapper {
+    position: relative;
+  }
+
+  .se-state--error {
+    color: #B94040;
+  }
+
+  .se-spinner {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border: 3px solid #EDE3F7;
+    border-top-color: #7B3FAF;
+    border-radius: 50%;
+    animation: se-spin 0.75s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  @keyframes se-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 600px) {
+    .se-wrapper {
+      padding: 40px 20px;
+    }
+    .se-header__title {
+      font-size: 24px;
+    }
+    .se-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+  }
+</style>
+
+<div class="se-wrapper">
+  <div class="se-version">v2.8</div>
+  <div class="se-header">
+    <div class="se-header__eyebrow">Community Spotlight</div>
+    <h2 class="se-header__title"></h2>
+    <p class="se-header__subtitle"></p>
+  </div>
+  <div id="se-content">
+    <div class="se-state">
+      <div class="se-spinner"></div>
+      <div>Loading experts…</div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="./app.js"></script>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Workflows — stock_last_sales_job</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; background: #f8f8f8; color: #1a1a1a; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+  /* Top bar */
+  .topbar { display: flex; align-items: center; gap: 8px; background: #1b2837; padding: 0 12px; height: 40px; flex-shrink: 0; }
+  .topbar-logo { color: #ff3621; font-weight: 700; font-size: 14px; letter-spacing: -0.5px; margin-right: 8px; white-space: nowrap; }
+  .topbar-search { flex: 1; max-width: 420px; background: #2c3e52; border: 1px solid #3d4f60; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; gap: 6px; height: 28px; }
+  .topbar-search input { background: none; border: none; outline: none; color: #ccc; font-size: 12px; flex: 1; }
+  .topbar-search input::placeholder { color: #666; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: #aaa; font-size: 12px; }
+  .topbar-avatar { width: 24px; height: 24px; border-radius: 50%; background: #5c7cfa; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 600; }
+
+  /* Layout */
+  .layout { display: flex; flex: 1; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar { width: 200px; background: #1b2837; color: #c8d4e0; display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+  .sidebar-section { padding: 6px 0; }
+  .sidebar-section-label { font-size: 10px; color: #6b7f8e; text-transform: uppercase; letter-spacing: 0.6px; padding: 10px 12px 4px; font-weight: 600; }
+  .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; cursor: pointer; font-size: 12px; color: #c8d4e0; border-radius: 4px; margin: 1px 6px; }
+  .sidebar-item:hover { background: #2c3e52; }
+  .sidebar-item.active { background: #2c3e52; color: #fff; }
+  .sidebar-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.8; }
+  .sidebar-new-btn { margin: 10px 10px 6px; background: #ff3621; color: white; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Breadcrumb / title bar */
+  .titlebar { background: white; border-bottom: 1px solid #e0e0e0; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; height: 48px; flex-shrink: 0; }
+  .breadcrumb { font-size: 12px; color: #666; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb a { color: #1473e6; text-decoration: none; }
+  .breadcrumb-sep { color: #aaa; }
+  .job-title { font-size: 15px; font-weight: 600; color: #1a1a1a; display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .star-icon { color: #aaa; font-size: 14px; cursor: pointer; }
+  .titlebar-actions { display: flex; gap: 8px; align-items: center; }
+  .btn { padding: 5px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: 500; border: 1px solid transparent; }
+  .btn-primary { background: #1473e6; color: white; border-color: #1473e6; }
+  .btn-secondary { background: white; color: #333; border-color: #ccc; }
+  .btn-danger-outline { background: white; color: #d7373f; border-color: #d7373f; font-size: 11px; padding: 4px 10px; }
+  .btn-run { background: #1473e6; color: white; display: flex; align-items: center; gap: 4px; padding: 5px 12px 5px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
+  .btn-run-dropdown { background: #0f5ec4; color: white; border: none; border-left: 1px solid #1473e6; padding: 5px 8px; border-radius: 0 4px 4px 0; cursor: pointer; margin-left: -1px; }
+
+  /* Tabs */
+  .tabs { background: white; border-bottom: 1px solid #e0e0e0; display: flex; padding: 0 16px; flex-shrink: 0; }
+  .tab { padding: 10px 16px; font-size: 13px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: #1473e6; border-bottom-color: #1473e6; font-weight: 500; }
+
+  /* Content area */
+  .content { flex: 1; display: flex; overflow: hidden; }
+
+  /* DAG canvas */
+  .dag-area { flex: 1; background: #f5f5f5; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .dag-canvas { position: relative; width: 580px; height: 120px; }
+  .dag-node { position: absolute; background: white; border: 1px solid #d0d0d0; border-radius: 6px; width: 155px; padding: 10px 12px; cursor: pointer; transition: box-shadow 0.15s; }
+  .dag-node:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .dag-node.selected { border-color: #1473e6; box-shadow: 0 0 0 2px rgba(20,115,230,0.25); }
+  .dag-node-title { font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dag-node-sub { font-size: 11px; color: #777; display: flex; align-items: center; gap: 4px; }
+  .dag-node-icon { width: 10px; height: 10px; background: #ddd; border-radius: 2px; flex-shrink: 0; }
+  .dag-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: flex; align-items: center; }
+  .dag-arrow-line { height: 1px; background: #aaa; }
+  .dag-arrow-head { width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 6px solid #aaa; }
+
+  /* Detail panel (task form) */
+  .detail-panel { width: 300px; background: white; border-left: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; overflow-y: auto; flex-shrink: 0; display: flex; flex-direction: column; }
+  .detail-header { padding: 12px 14px; border-bottom: 1px solid #e8e8e8; font-weight: 600; font-size: 13px; }
+  .form-row { padding: 8px 14px; border-bottom: 1px solid #f0f0f0; }
+  .form-label { font-size: 11px; color: #666; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+  .form-value { font-size: 12px; color: #1a1a1a; background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 3px; padding: 5px 8px; width: 100%; }
+  .form-value-plain { font-size: 12px; color: #1a1a1a; }
+  .form-value-link { font-size: 12px; color: #1473e6; text-decoration: none; }
+  .form-value-cluster { font-size: 11px; color: #444; background: #f0f0f0; border-radius: 3px; padding: 4px 8px; }
+  .form-info { font-size: 11px; color: #666; line-height: 1.4; margin-top: 2px; }
+  .detail-footer { padding: 12px 14px; display: flex; gap: 8px; margin-top: auto; border-top: 1px solid #e8e8e8; }
+  .info-icon { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1px solid #999; border-radius: 50%; font-size: 9px; color: #999; cursor: help; flex-shrink: 0; }
+
+  /* Job meta panel */
+  .meta-panel { width: 260px; background: white; overflow-y: auto; flex-shrink: 0; }
+  .meta-section { padding: 12px 14px; border-bottom: 1px solid #e8e8e8; }
+  .meta-section-title { font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .meta-section-icon { font-size: 14px; }
+  .meta-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; }
+  .meta-key { color: #666; }
+  .meta-val { color: #1a1a1a; font-weight: 500; text-align: right; max-width: 140px; word-break: break-all; }
+  .meta-val-link { color: #1473e6; text-decoration: none; font-size: 11px; }
+  .meta-val-id { color: #555; font-family: monospace; font-size: 11px; }
+  .meta-badge { font-size: 11px; background: #f0f0f0; border-radius: 10px; padding: 2px 8px; color: #444; }
+  .meta-add-link { font-size: 11px; color: #1473e6; cursor: pointer; text-decoration: none; }
+  .schedule-detail { font-size: 11px; color: #555; line-height: 1.4; margin-top: 2px; }
+  .schedule-actions { display: flex; gap: 6px; margin-top: 6px; }
+  .schedule-btn { font-size: 11px; color: #1473e6; cursor: pointer; background: none; border: none; padding: 0; }
+  .compute-spec { font-size: 11px; color: #555; line-height: 1.6; }
+  .compute-view { font-size: 11px; color: #1473e6; cursor: pointer; margin-top: 4px; display: block; }
+  .lineage-link { font-size: 11px; color: #1473e6; }
+  .asset-bundle-bar { background: #e8f4fd; border-bottom: 1px solid #b8d8f5; padding: 6px 14px; font-size: 11px; color: #1a5a8c; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .asset-bundle-bar a { color: #1473e6; }
+  .disconnect-bar { background: white; border-bottom: 1px solid #e0e0e0; padding: 5px 14px; display: flex; justify-content: flex-end; flex-shrink: 0; }
+
+  /* Toolbar mini */
+  .dag-toolbar { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; }
+  .dag-toolbar-btn { width: 28px; height: 28px; background: white; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #555; }
+  .dag-toolbar-btn:hover { background: #f0f0f0; }
+
+  scrollbar-width: thin;
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <span class="topbar-logo">databricks</span>
+  <div class="topbar-search">
+    <svg width="13" height="13" fill="none" stroke="#888" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search data, notebooks, reports, and more…" />
+    <span style="font-size:11px;color:#555;background:#3d4f60;padding:1px 5px;border-radius:3px;">⌘ K</span>
+  </div>
+  <div class="topbar-right">
+    <span style="color:#aaa;font-size:12px;">datacontract-test-2 ▾</span>
+    <div class="topbar-avatar">JC</div>
+    <span style="color:#aaa;font-size:12px;">jochen.christ@missy.com ▾</span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div style="padding:8px 10px;">
+      <button class="sidebar-new-btn">
+        <svg width="13" height="13" fill="white" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        New
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Workspace
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Recents
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+        Catalog
+      </div>
+      <div class="sidebar-item active">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <strong>Workflows</strong>
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+        Compute
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">SQL</div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+        SQL Editor
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Queries
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Dashboards
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        Alerts
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Query History
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        SQL Warehouses
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Data Engineering</div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Job Runs
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        Delta Ingestion
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Machine Learning</div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        Experiments
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+        Features
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
+        Models
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Serving
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="margin-top:auto;">
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        Marketplace
+      </div>
+      <div class="sidebar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Partner Connect
+      </div>
+      <div class="sidebar-item" style="margin-top:8px;border-top:1px solid #2c3e52;padding-top:8px;">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+        Collapse menu
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <!-- Title bar -->
+    <div style="background:white;border-bottom:1px solid #e0e0e0;padding:8px 16px;flex-shrink:0;">
+      <div class="breadcrumb">
+        <a href="#">Workflows</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="#">data</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="#">Preview feedback ⚑</a>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div class="job-title">
+          [dev.jochen_christ] stock_last_sales_job
+          <span class="star-icon">☆</span>
+          <span style="font-size:18px;color:#aaa;">⋯</span>
+        </div>
+        <div class="titlebar-actions">
+          <div style="display:flex;align-items:center;">
+            <button class="btn-run">▶ Run now</button>
+            <button class="btn-run-dropdown">▾</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Asset bundle notice -->
+    <div class="asset-bundle-bar">
+      <svg width="13" height="13" fill="none" stroke="#1a5a8c" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Connected to Databricks Asset Bundles <a href="#">Learn more</a>
+    </div>
+    <div class="disconnect-bar">
+      <button class="btn-danger-outline">Disconnect from source</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab">Runs</div>
+      <div class="tab active">Tasks</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- DAG area -->
+      <div class="dag-area">
+        <div class="dag-canvas">
+          <!-- Task nodes -->
+          <div class="dag-node" style="left:0;top:20px;" onclick="selectTask('create')">
+            <div class="dag-node-title">create_unity_catalog_table</div>
+            <div class="dag-node-sub">
+              <div class="dag-node-icon" style="background:#4a90d9;"></div>
+              alc_cluster
+            </div>
+          </div>
+
+          <!-- Arrow 1 -->
+          <div style="position:absolute;left:158px;top:52px;display:flex;align-items:center;">
+            <div style="width:55px;height:1px;background:#999;"></div>
+            <div style="width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid #999;"></div>
+          </div>
+
+          <div class="dag-node selected" style="left:215px;top:20px;" onclick="selectTask('main')">
+            <div class="dag-node-title">main_task</div>
+            <div class="dag-node-sub">
+              <div class="dag-node-icon" style="background:#4a90d9;"></div>
+              alc_cluster
+            </div>
+          </div>
+
+          <!-- Arrow 2 -->
+          <div style="position:absolute;left:373px;top:52px;display:flex;align-items:center;">
+            <div style="width:55px;height:1px;background:#999;"></div>
+            <div style="width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid #999;"></div>
+          </div>
+
+          <div class="dag-node" style="left:430px;top:20px;" onclick="selectTask('test')">
+            <div class="dag-node-title">datacontract_test_task</div>
+            <div class="dag-node-sub">
+              <div class="dag-node-icon" style="background:#4a90d9;"></div>
+              alc_cluster
+            </div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="dag-toolbar">
+          <button class="dag-toolbar-btn" title="Zoom in">+</button>
+          <button class="dag-toolbar-btn" title="Zoom out">−</button>
+          <button class="dag-toolbar-btn" title="Fit to screen" style="font-size:11px;">⊡</button>
+          <button class="dag-toolbar-btn" title="Add task" style="font-size:18px;">⊕</button>
+          <button class="dag-toolbar-btn" title="Settings">⚙</button>
+        </div>
+      </div>
+
+      <!-- Task detail panel -->
+      <div class="detail-panel">
+        <div style="padding:10px 14px;border-bottom:1px solid #e8e8e8;font-weight:600;font-size:13px;color:#1a1a1a;">main_task</div>
+
+        <div class="form-row">
+          <div class="form-label">Task name <span class="info-icon">i</span></div>
+          <input class="form-value" type="text" value="main_task" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Type <span class="info-icon">i</span></div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:16px;height:16px;background:#4a90d9;border-radius:3px;flex-shrink:0;"></div>
+            <select class="form-value" style="flex:1;">
+              <option>Python wheel</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Package name <span class="info-icon">i</span></div>
+          <input class="form-value" type="text" value="stock_last_sales" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Entry Point <span class="info-icon">i</span></div>
+          <input class="form-value" type="text" value="main" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Cluster <span class="info-icon">i</span></div>
+          <div class="form-value-cluster">
+            job_cluster &nbsp;·&nbsp; 01.08 – 8 Cores – DBR 13.3 LTS – Spark 3.4.1, Scale 3.12 &nbsp;
+            <a href="#" style="color:#1473e6;font-size:11px;">✎</a>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Depends on</div>
+          <div class="form-value-plain">create_unity_catalog_table</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Run if dependencies <span class="info-icon">i</span></div>
+          <select class="form-value">
+            <option>All succeeded</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">Dependent libraries <span class="info-icon">i</span></div>
+          <div class="form-info" style="font-size:11px;color:#555;word-break:break-all;">
+            dbfs:/FileStore/sc/internal/stock_last_sales-0.0.1+32840422.14841-py3-none-any.whl
+          </div>
+        </div>
+
+        <div class="detail-footer">
+          <button class="btn btn-secondary" style="flex:1;">Cancel</button>
+          <button class="btn btn-primary" style="flex:1;">Save task</button>
+        </div>
+      </div>
+
+      <!-- Job metadata panel -->
+      <div class="meta-panel">
+
+        <div class="meta-section">
+          <div class="meta-section-title">
+            <span style="font-size:15px;">📋</span> Job details
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Job ID</span>
+            <span class="meta-val-id">986390050077622 <span class="info-icon" style="margin-left:3px;">i</span></span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Creator</span>
+            <span class="meta-val">Jochen Christ</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Run as</span>
+            <span class="meta-val">Jochen Christ</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Tags</span>
+            <span class="meta-badge">jochen_christ</span>
+          </div>
+          <div class="meta-row" style="margin-top:4px;">
+            <span class="meta-key">Description</span>
+            <a href="#" class="meta-add-link">Add description</a>
+          </div>
+          <div class="meta-row" style="margin-top:4px;">
+            <span class="meta-key">Lineage</span>
+            <a href="#" class="meta-val-link">5 upstream tables, 1 downstream table</a>
+          </div>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">
+            <span style="font-size:15px;">🔗</span> Git
+          </div>
+          <div style="font-size:11px;color:#555;">(no git remote configured)</div>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">
+            <span style="font-size:15px;">📅</span> Schedules &amp; Triggers
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+            <span style="font-size:11px;background:#fff3cd;color:#856404;border-radius:3px;padding:2px 6px;">Paused</span>
+          </div>
+          <div class="schedule-detail">At 10:00 AM (UTC+02:00) — Amsterdam, Berlin, Be... DST</div>
+          <div class="schedule-actions">
+            <button class="schedule-btn">Add trigger</button>
+            <button class="schedule-btn">Resume</button>
+            <button class="schedule-btn">Delete</button>
+          </div>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">
+            <span style="font-size:15px;">⚙</span> Compute
+          </div>
+          <div style="font-size:12px;font-weight:500;margin-bottom:4px;">job_cluster</div>
+          <div class="compute-spec">
+            Driver: i3.xlarge · Workers: i3.xlarge · 1 charge–1 workers · Spot fall back to On-demand · 13.3 LTS (includes Apache Spark 3.4.1, Scale 3.12) · az-cannar-lp
+          </div>
+          <a href="#" class="compute-view">View</a>
+        </div>
+
+        <div class="meta-section">
+          <div class="meta-section-title">
+            <span style="font-size:15px;">⚡</span> Job parameters
+          </div>
+          <div style="font-size:11px;color:#777;font-style:italic;">No job parameters are defined for this job.</div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectTask(name) {
+    document.querySelectorAll('.dag-node').forEach(n => n.classList.remove('selected'));
+    const nodes = document.querySelectorAll('.dag-node');
+    const map = { create: 0, main: 1, test: 2 };
+    if (nodes[map[name]]) nodes[map[name]].classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
