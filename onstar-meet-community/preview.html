@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet the Community – Widget Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 60px;
+      background: #f9fafb;
+      font-family: 'Inter', sans-serif;
+    }
+    meet-community-widget {
+      display: block;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <meet-community-widget></meet-community-widget>
+
+  <script>
+    // Minimal SDK shim so app.js runs outside Gainsight
+    const sampleProps = {
+      sectionTitle: 'Meet the community',
+
+      member1_name: 'Jineet Vora',
+      member1_title: 'VP Lead Software Engineer',
+      member1_handle: 'Jineet_Vora',
+      member1_location: 'London, UK',
+      member1_flag: '🇬🇧',
+      member1_products: 'Adobe Experience Manager, Edge Delivery Services',
+      member1_askme: 'Adobe Experience Manager Sites, Adobe Experience Manager Assets, Adobe Experience Manager Guides, Dynamic Media (AEM Assets)',
+      member1_photo: '',
+      member1_color: '#00a651',
+
+      member2_name: 'Sanford Whiteman',
+      member2_title: 'Chief Technologist',
+      member2_handle: 'SanfordWhiteman',
+      member2_location: 'New York, NY',
+      member2_flag: '🇺🇸',
+      member2_products: 'Adobe Marketo Engage',
+      member2_askme: 'Forms, JavaScript, webhooks, velocity scripting, REST API integrations, database operations',
+      member2_photo: '',
+      member2_color: '#f5c518',
+
+      member3_name: 'Maria Chen',
+      member3_title: 'Senior Solutions Architect',
+      member3_handle: 'MariaChen',
+      member3_location: 'San Francisco, CA',
+      member3_flag: '🇺🇸',
+      member3_products: 'Adobe Analytics, Adobe Target',
+      member3_askme: 'A/B testing, personalization, data layers, tag management',
+      member3_photo: '',
+      member3_color: '#0077b6',
+
+      member4_name: 'Luca Ferraro',
+      member4_title: 'Community Champion',
+      member4_handle: 'LucaFerraro',
+      member4_location: 'Milan, Italy',
+      member4_flag: '🇮🇹',
+      member4_products: 'Adobe Commerce, Adobe Experience Manager',
+      member4_askme: 'PWA Studio, GraphQL, headless commerce, performance optimization',
+      member4_photo: '',
+      member4_color: '#e63946',
+    }
+
+    class MockSDK {
+      constructor(host) {
+        this._host = host
+        this._shadow = host.attachShadow({ mode: 'open' })
+        this._listeners = {}
+      }
+      async whenReady() {}
+      getProps() { return sampleProps }
+      $(sel) { return this._shadow.querySelector(sel) }
+      $$(sel) { return this._shadow.querySelectorAll(sel) }
+      getContainer() { return this._shadow }
+      on(event, fn) {
+        this._listeners[event] = this._listeners[event] || []
+        this._listeners[event].push(fn)
+      }
+      getDesignTokens() { return {} }
+    }
+
+    customElements.define('meet-community-widget', class extends HTMLElement {
+      async connectedCallback() {
+        const resp = await fetch('widgets/meet_the_community/index.html')
+        const html = await resp.text()
+        const sdk = new MockSDK(this)
+        sdk._shadow.innerHTML = html
+
+        const script = sdk._shadow.querySelector('script[type="module"]')
+        if (script) script.remove()
+
+        const mod = await import('./widgets/meet_the_community/app.js')
+        await mod.init(sdk)
+      }
+    })
+  </script>
+</body>
+</html>

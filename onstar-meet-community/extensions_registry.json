@@ -1,0 +1,114 @@
+{
+  "widgets": [
+    {
+      "version": "1.0.0",
+      "title": "Meet the Community",
+      "type": "onstar_meet_the_community",
+      "description": "Showcases featured community members in a two-up carousel with profile photo, role, handle, location, products, and expertise.",
+      "category": "custom",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/meet_the_community",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          { "name": "sectionTitle",     "type": "text",  "label": "Section Title",           "defaultValue": "Meet the community" },
+
+          { "name": "member1_name",     "type": "text",  "label": "Member 1 – Name",         "defaultValue": "Jineet Vora" },
+          { "name": "member1_title",    "type": "text",  "label": "Member 1 – Job Title",     "defaultValue": "VP Lead Software Engineer" },
+          { "name": "member1_handle",   "type": "text",  "label": "Member 1 – Username",      "defaultValue": "Jineet_Vora" },
+          { "name": "member1_location", "type": "text",  "label": "Member 1 – Location",      "defaultValue": "London, UK" },
+          { "name": "member1_flag",     "type": "text",  "label": "Member 1 – Flag emoji",    "defaultValue": "🇬🇧" },
+          { "name": "member1_products", "type": "text",  "label": "Member 1 – Products",      "defaultValue": "" },
+          { "name": "member1_askme",    "type": "text",  "label": "Member 1 – Ask me about",  "defaultValue": "" },
+          { "name": "member1_photo",    "type": "text",  "label": "Member 1 – Photo URL",     "defaultValue": "" },
+          { "name": "member1_color",    "type": "color", "label": "Member 1 – Accent Color",  "defaultValue": "#00a651" },
+
+          { "name": "member2_name",     "type": "text",  "label": "Member 2 – Name",         "defaultValue": "Sanford Whiteman" },
+          { "name": "member2_title",    "type": "text",  "label": "Member 2 – Job Title",     "defaultValue": "Chief Technologist" },
+          { "name": "member2_handle",   "type": "text",  "label": "Member 2 – Username",      "defaultValue": "SanfordWhiteman" },
+          { "name": "member2_location", "type": "text",  "label": "Member 2 – Location",      "defaultValue": "New York, NY" },
+          { "name": "member2_flag",     "type": "text",  "label": "Member 2 – Flag emoji",    "defaultValue": "🇺🇸" },
+          { "name": "member2_products", "type": "text",  "label": "Member 2 – Products",      "defaultValue": "" },
+          { "name": "member2_askme",    "type": "text",  "label": "Member 2 – Ask me about",  "defaultValue": "" },
+          { "name": "member2_photo",    "type": "text",  "label": "Member 2 – Photo URL",     "defaultValue": "" },
+          { "name": "member2_color",    "type": "color", "label": "Member 2 – Accent Color",  "defaultValue": "#f5c518" },
+
+          { "name": "member3_name",     "type": "text",  "label": "Member 3 – Name",         "defaultValue": "" },
+          { "name": "member3_title",    "type": "text",  "label": "Member 3 – Job Title",     "defaultValue": "" },
+          { "name": "member3_handle",   "type": "text",  "label": "Member 3 – Username",      "defaultValue": "" },
+          { "name": "member3_location", "type": "text",  "label": "Member 3 – Location",      "defaultValue": "" },
+          { "name": "member3_flag",     "type": "text",  "label": "Member 3 – Flag emoji",    "defaultValue": "📍" },
+          { "name": "member3_products", "type": "text",  "label": "Member 3 – Products",      "defaultValue": "" },
+          { "name": "member3_askme",    "type": "text",  "label": "Member 3 – Ask me about",  "defaultValue": "" },
+          { "name": "member3_photo",    "type": "text",  "label": "Member 3 – Photo URL",     "defaultValue": "" },
+          { "name": "member3_color",    "type": "color", "label": "Member 3 – Accent Color",  "defaultValue": "#0077b6" },
+
+          { "name": "member4_name",     "type": "text",  "label": "Member 4 – Name",         "defaultValue": "" },
+          { "name": "member4_title",    "type": "text",  "label": "Member 4 – Job Title",     "defaultValue": "" },
+          { "name": "member4_handle",   "type": "text",  "label": "Member 4 – Username",      "defaultValue": "" },
+          { "name": "member4_location", "type": "text",  "label": "Member 4 – Location",      "defaultValue": "" },
+          { "name": "member4_flag",     "type": "text",  "label": "Member 4 – Flag emoji",    "defaultValue": "📍" },
+          { "name": "member4_products", "type": "text",  "label": "Member 4 – Products",      "defaultValue": "" },
+          { "name": "member4_askme",    "type": "text",  "label": "Member 4 – Ask me about",  "defaultValue": "" },
+          { "name": "member4_photo",    "type": "text",  "label": "Member 4 – Photo URL",     "defaultValue": "" },
+          { "name": "member4_color",    "type": "color", "label": "Member 4 – Accent Color",  "defaultValue": "#e63946" },
+
+          { "name": "member5_name",     "type": "text",  "label": "Member 5 – Name",         "defaultValue": "" },
+          { "name": "member5_title",    "type": "text",  "label": "Member 5 – Job Title",     "defaultValue": "" },
+          { "name": "member5_handle",   "type": "text",  "label": "Member 5 – Username",      "defaultValue": "" },
+          { "name": "member5_location", "type": "text",  "label": "Member 5 – Location",      "defaultValue": "" },
+          { "name": "member5_flag",     "type": "text",  "label": "Member 5 – Flag emoji",    "defaultValue": "📍" },
+          { "name": "member5_products", "type": "text",  "label": "Member 5 – Products",      "defaultValue": "" },
+          { "name": "member5_askme",    "type": "text",  "label": "Member 5 – Ask me about",  "defaultValue": "" },
+          { "name": "member5_photo",    "type": "text",  "label": "Member 5 – Photo URL",     "defaultValue": "" },
+          { "name": "member5_color",    "type": "color", "label": "Member 5 – Accent Color",  "defaultValue": "#7b2d8b" },
+
+          { "name": "member6_name",     "type": "text",  "label": "Member 6 – Name",         "defaultValue": "" },
+          { "name": "member6_title",    "type": "text",  "label": "Member 6 – Job Title",     "defaultValue": "" },
+          { "name": "member6_handle",   "type": "text",  "label": "Member 6 – Username",      "defaultValue": "" },
+          { "name": "member6_location", "type": "text",  "label": "Member 6 – Location",      "defaultValue": "" },
+          { "name": "member6_flag",     "type": "text",  "label": "Member 6 – Flag emoji",    "defaultValue": "📍" },
+          { "name": "member6_products", "type": "text",  "label": "Member 6 – Products",      "defaultValue": "" },
+          { "name": "member6_askme",    "type": "text",  "label": "Member 6 – Ask me about",  "defaultValue": "" },
+          { "name": "member6_photo",    "type": "text",  "label": "Member 6 – Photo URL",     "defaultValue": "" },
+          { "name": "member6_color",    "type": "color", "label": "Member 6 – Accent Color",  "defaultValue": "#f97316" }
+        ]
+      },
+      "defaultConfig": {
+        "sectionTitle": "Meet the community",
+        "member1_name": "Jineet Vora",
+        "member1_title": "VP Lead Software Engineer",
+        "member1_handle": "Jineet_Vora",
+        "member1_location": "London, UK",
+        "member1_flag": "🇬🇧",
+        "member1_products": "",
+        "member1_askme": "",
+        "member1_photo": "",
+        "member1_color": "#00a651",
+        "member2_name": "Sanford Whiteman",
+        "member2_title": "Chief Technologist",
+        "member2_handle": "SanfordWhiteman",
+        "member2_location": "New York, NY",
+        "member2_flag": "🇺🇸",
+        "member2_products": "",
+        "member2_askme": "",
+        "member2_photo": "",
+        "member2_color": "#f5c518",
+        "member3_name": "", "member3_title": "", "member3_handle": "", "member3_location": "", "member3_flag": "📍", "member3_products": "", "member3_askme": "", "member3_photo": "", "member3_color": "#0077b6",
+        "member4_name": "", "member4_title": "", "member4_handle": "", "member4_location": "", "member4_flag": "📍", "member4_products": "", "member4_askme": "", "member4_photo": "", "member4_color": "#e63946",
+        "member5_name": "", "member5_title": "", "member5_handle": "", "member5_location": "", "member5_flag": "📍", "member5_products": "", "member5_askme": "", "member5_photo": "", "member5_color": "#7b2d8b",
+        "member6_name": "", "member6_title": "", "member6_handle": "", "member6_location": "", "member6_flag": "📍", "member6_products": "", "member6_askme": "", "member6_photo": "", "member6_color": "#f97316"
+      }
+    }
+  ]
+}

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Health Report — May 28, 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a2e;
+      padding: 32px 24px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #6b7280;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .summary-card .value {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .summary-card .label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .red-val { color: #ef4444; }
+    .yellow-val { color: #f59e0b; }
+    .green-val { color: #10b981; }
+    .blue-val { color: #3b82f6; }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #374151;
+    }
+
+    .accounts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    .account-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: box-shadow 0.15s;
+    }
+
+    .account-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+    .account-card.border-red { border-left: 4px solid #ef4444; }
+    .account-card.border-yellow { border-left: 4px solid #f59e0b; }
+    .account-card.border-green { border-left: 4px solid #10b981; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-header .name {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .health-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .badge-red { background: #fef2f2; color: #ef4444; }
+    .badge-yellow { background: #fffbeb; color: #d97706; }
+    .badge-green { background: #f0fdf4; color: #10b981; }
+
+    .health-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .meta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .meta-item strong {
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .ctas-section {}
+
+    .cta-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 12.5px;
+    }
+
+    .cta-item:last-child { margin-bottom: 0; }
+
+    .cta-critical { background: #fef2f2; }
+    .cta-high { background: #fffbeb; }
+    .cta-medium { background: #f9fafb; }
+    .cta-expansion { background: #f0fdf4; }
+
+    .cta-priority-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .tag-critical { background: #ef4444; color: #fff; }
+    .tag-high { background: #f59e0b; color: #fff; }
+    .tag-medium { background: #9ca3af; color: #fff; }
+    .tag-expansion { background: #10b981; color: #fff; }
+
+    .cta-name { line-height: 1.4; color: #374151; }
+
+    .cta-due {
+      margin-left: auto;
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cta-due.overdue { color: #ef4444; font-weight: 600; }
+
+    .signal-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .signal-chip {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .chip-danger { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .chip-warn { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .chip-info { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+
+    .no-cta {
+      font-size: 12.5px;
+      color: #9ca3af;
+      font-style: italic;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .priority-table-wrap {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: 20px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead tr {
+      background: #f9fafb;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      font-weight: 700;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .score-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-bar {
+      flex: 1;
+      height: 6px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 60px;
+    }
+
+    .score-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .fill-red { background: #ef4444; }
+    .fill-yellow { background: #f59e0b; }
+    .fill-green { background: #10b981; }
+
+    .score-num {
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 24px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Account Health Report</h1>
+    <p style="font-size:13px;color:#6b7280;margin-top:4px;">Carlos Jimenez · Top Accounts by ARR</p>
+  </div>
+  <span>📅 May 28, 2026</span>
+</header>
+
+<!-- Summary Strip -->
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="value blue-val">10</div>
+    <div class="label">Total Accounts</div>
+  </div>
+  <div class="summary-card">
+    <div class="value red-val">5</div>
+    <div class="label">Red Health</div>
+  </div>
+  <div class="summary-card">
+    <div class="value yellow-val">3</div>
+    <div class="label">Yellow Health</div>
+  </div>
+  <div class="summary-card">
+    <div class="value green-val">1</div>
+    <div class="label">Green Health</div>
+  </div>
+  <div class="summary-card">
+    <div class="value" style="color:#ef4444">37</div>
+    <div class="label">Open CTAs</div>
+  </div>
+  <div class="summary-card">
+    <div class="value" style="color:#ef4444">9</div>
+    <div class="label">Overdue CTAs</div>
+  </div>
+</div>
+
+<!-- Priority Table -->
+<div class="priority-table-wrap">
+  <h2>Portfolio Overview</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>ARR</th>
+        <th>Health Score</th>
+        <th>Stage</th>
+        <th>Open CTAs</th>
+        <th>Top Risk Signal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Abbett</strong></td>
+        <td>$250,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-yellow" style="width:73%"></div></div>
+            <span class="score-num yellow-val">73</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td><strong style="color:#ef4444">26</strong></td>
+        <td><span class="signal-chip chip-danger">Support Escalation · Overdue Onboarding</span></td>
+      </tr>
+      <tr>
+        <td><strong>Redmontis</strong></td>
+        <td>$245,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-red" style="width:39%"></div></div>
+            <span class="score-num red-val">39</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>2</td>
+        <td><span class="signal-chip chip-danger">Support Escalation · 60d No Adoption</span></td>
+      </tr>
+      <tr>
+        <td><strong>Averin</strong></td>
+        <td>$240,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-red" style="width:30%"></div></div>
+            <span class="score-num red-val">30</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>–</td>
+        <td><span class="signal-chip chip-danger">No CTAs — Dark Account</span></td>
+      </tr>
+      <tr>
+        <td><strong>Bremott</strong></td>
+        <td>$235,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-green" style="width:76%"></div></div>
+            <span class="score-num green-val">76</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>2</td>
+        <td><span class="signal-chip chip-warn">Usage Drop &gt;30%</span></td>
+      </tr>
+      <tr>
+        <td><strong>Trenford</strong></td>
+        <td>$230,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-yellow" style="width:73%"></div></div>
+            <span class="score-num yellow-val">73</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>3</td>
+        <td><span class="signal-chip chip-warn">Single-Threaded · Community Dark</span></td>
+      </tr>
+      <tr>
+        <td><strong>Harrin</strong></td>
+        <td>$225,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-yellow" style="width:55%"></div></div>
+            <span class="score-num yellow-val">55</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>4</td>
+        <td><span class="signal-chip chip-danger">NPS Detractor · Sponsor Change</span></td>
+      </tr>
+      <tr>
+        <td><strong>Harbour Cloud</strong></td>
+        <td>$190,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-red" style="width:48%"></div></div>
+            <span class="score-num red-val">48</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>–</td>
+        <td><span class="signal-chip chip-danger">No CTAs — Dark Account</span></td>
+      </tr>
+      <tr>
+        <td><strong>Hall Oakridge Advisory</strong></td>
+        <td>$185,000</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill fill-red" style="width:34%"></div></div>
+            <span class="score-num red-val">34</span>
+          </div>
+        </td>
+        <td>–</td>
+        <td>–</td>
+        <td><span class="signal-chip chip-danger">No CTAs — Dark Account</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Account Cards -->
+<h2 style="margin-bottom:16px">Account Detail Cards</h2>
+<div class="accounts-grid">
+
+  <!-- Abbett -->
+  <div class="account-card border-yellow">
+    <div class="card-header">
+      <div class="name">Abbett</div>
+      <div class="health-badge badge-yellow"><span class="health-dot dot-yellow"></span> Yellow · 73</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $250,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 26</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <div class="cta-item cta-critical">
+        <span class="cta-priority-tag tag-critical">Critical</span>
+        <span class="cta-name">Support Escalation</span>
+        <span class="cta-due">Jun 9</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">License Utilization &gt;90%</span>
+        <span class="cta-due">May 29</span>
+      </div>
+      <div class="cta-item cta-expansion">
+        <span class="cta-priority-tag tag-expansion">Expand</span>
+        <span class="cta-name">Cross-Sell: Product Interest</span>
+        <span class="cta-due">May 29</span>
+      </div>
+      <div class="cta-item cta-medium">
+        <span class="cta-priority-tag tag-medium">Med</span>
+        <span class="cta-name">QBR Due</span>
+        <span class="cta-due">Jun 1</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">9 Overdue Onboarding CTAs</span>
+        <span class="signal-chip chip-warn">Renewal Discovery Overdue</span>
+        <span class="signal-chip chip-warn">Executive Re-engagement Needed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Redmontis -->
+  <div class="account-card border-red">
+    <div class="card-header">
+      <div class="name">Redmontis</div>
+      <div class="health-badge badge-red"><span class="health-dot dot-red"></span> Red · 39</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $245,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 2</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <div class="cta-item cta-critical">
+        <span class="cta-priority-tag tag-critical">Critical</span>
+        <span class="cta-name">Support Escalation</span>
+        <span class="cta-due">Jun 9</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Low Adoption: No Course Activity &gt;60 Days</span>
+        <span class="cta-due">Jun 12</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">Engagement Drop</span>
+        <span class="signal-chip chip-danger">Adoption Risk</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Averin -->
+  <div class="account-card border-red">
+    <div class="card-header">
+      <div class="name">Averin</div>
+      <div class="health-badge badge-red"><span class="health-dot dot-red"></span> Red · 30</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $240,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 0</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <p class="no-cta">No open CTAs — account may have gone dark. Immediate outreach recommended.</p>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">Lowest Health Score (30)</span>
+        <span class="signal-chip chip-danger">No Tracked Engagement</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Harrin -->
+  <div class="account-card border-yellow">
+    <div class="card-header">
+      <div class="name">Harrin</div>
+      <div class="health-badge badge-yellow"><span class="health-dot dot-yellow"></span> Yellow · 55</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $225,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 4</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <div class="cta-item cta-critical">
+        <span class="cta-priority-tag tag-critical">Critical</span>
+        <span class="cta-name">Support Escalation</span>
+        <span class="cta-due">Jun 9</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Community Alert: Unanswered Question 10+ Days</span>
+        <span class="cta-due overdue">Today</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">NPS Detractor Follow-Up</span>
+        <span class="cta-due">Tomorrow</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Executive Sponsor Change</span>
+        <span class="cta-due">Jun 4</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">NPS Detractor</span>
+        <span class="signal-chip chip-danger">Sponsor Change Risk</span>
+        <span class="signal-chip chip-warn">Unanswered Community Post</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trenford -->
+  <div class="account-card border-yellow">
+    <div class="card-header">
+      <div class="name">Trenford</div>
+      <div class="health-badge badge-yellow"><span class="health-dot dot-yellow"></span> Yellow · 73</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $230,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 3</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <div class="cta-item cta-critical">
+        <span class="cta-priority-tag tag-critical">Critical</span>
+        <span class="cta-name">Support Escalation</span>
+        <span class="cta-due">Jun 9</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Account Not Multithreaded</span>
+        <span class="cta-due">Jun 10</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Community Risk — No Activity (30 Days)</span>
+        <span class="cta-due">Jun 12</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-warn">Single-Threaded</span>
+        <span class="signal-chip chip-warn">Community Dark 30d</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bremott -->
+  <div class="account-card border-green">
+    <div class="card-header">
+      <div class="name">Bremott</div>
+      <div class="health-badge badge-green"><span class="health-dot dot-green"></span> Green · 76</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $235,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 2</div>
+    </div>
+    <div>
+      <div class="section-label">Issues to Watch</div>
+      <div class="cta-item cta-critical">
+        <span class="cta-priority-tag tag-critical">Critical</span>
+        <span class="cta-name">Support Escalation</span>
+        <span class="cta-due">Jun 9</span>
+      </div>
+      <div class="cta-item cta-high">
+        <span class="cta-priority-tag tag-high">High</span>
+        <span class="cta-name">Usage Drop &gt;30%</span>
+        <span class="cta-due">Jun 12</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-warn">Usage Declining</span>
+        <span class="signal-chip chip-info">Score May Slip</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Harbour Cloud -->
+  <div class="account-card border-red">
+    <div class="card-header">
+      <div class="name">Harbour Cloud</div>
+      <div class="health-badge badge-red"><span class="health-dot dot-red"></span> Red · 48</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $190,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 0</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <p class="no-cta">No open CTAs — account likely disengaged. Proactive check-in recommended.</p>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">No Tracked Engagement</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hall Oakridge Advisory -->
+  <div class="account-card border-red">
+    <div class="card-header">
+      <div class="name">Hall Oakridge Advisory</div>
+      <div class="health-badge badge-red"><span class="health-dot dot-red"></span> Red · 34</div>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>ARR</strong> $185,000</div>
+      <div class="meta-item"><strong>Open CTAs</strong> 0</div>
+    </div>
+    <div>
+      <div class="section-label">Critical Issues</div>
+      <p class="no-cta">No open CTAs — dark account with no engagement tracked.</p>
+    </div>
+    <div>
+      <div class="section-label">Risk Signals</div>
+      <div class="signal-row">
+        <span class="signal-chip chip-danger">Dark Account</span>
+        <span class="signal-chip chip-danger">No Engagement</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Generated from Gainsight · Carlos Jimenez · May 28, 2026
+</footer>
+
+</body>
+</html>

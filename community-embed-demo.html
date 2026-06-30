@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AARP.org — Community Integration Demo</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f5f5f5; color: #333; }
+
+    /* ── Prospect site nav ── */
+    .site-header {
+      background: #c0392b;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .site-header .logo {
+      color: #fff;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .site-header nav a {
+      color: rgba(255,255,255,.88);
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .site-header nav a:hover { color: #fff; text-decoration: underline; }
+
+    /* ── Hero banner ── */
+    .hero {
+      background: linear-gradient(135deg, #b92d20 0%, #922318 100%);
+      padding: 56px 40px 48px;
+      color: #fff;
+    }
+    .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .hero p  { font-size: 16px; opacity: .85; max-width: 600px; line-height: 1.6; }
+
+    /* ── Page layout ── */
+    .page-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 40px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 40px;
+    }
+
+    /* ── Main content column ── */
+    .main-content h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #222;
+    }
+    .main-content p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .promo-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .promo-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    }
+    .promo-card .icon { font-size: 28px; margin-bottom: 10px; }
+    .promo-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .promo-card p  { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
+
+    /* ── Community embed column ── */
+    .community-sidebar {
+      position: relative;
+    }
+
+    /* Gainsight CC badge */
+    .gs-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px 6px 0 0;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .gs-badge .dot {
+      width: 8px; height: 8px;
+      background: #0070d2;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .gs-badge span.brand { color: #0070d2; font-weight: 700; }
+
+    /* The widget wrapper */
+    .widget-shell {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    /* ── Injected community widget styles ── */
+    .widget-shell .widget__heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+      margin: 0;
+      padding: 20px 20px 4px;
+    }
+    .widget-shell .widget__subheading {
+      font-size: 12px;
+      color: #888;
+      font-weight: 400;
+      padding: 0 20px 12px;
+      margin: 0;
+    }
+
+    /* Tabs nav */
+    .widget-shell .tabs--navigation { padding: 0 12px; }
+    .widget-shell .tabs--nav { overflow-x: auto; }
+    .widget-shell ul.tabs--navigation {
+      display: flex;
+      gap: 0;
+      list-style: none;
+      border-bottom: 2px solid #eee;
+      margin: 0;
+      padding: 0 8px;
+    }
+    .widget-shell .tabs__item a {
+      display: block;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+    }
+    .widget-shell .tabs__item a.is-active {
+      color: #c0392b;
+      border-bottom-color: #c0392b;
+    }
+    .widget-shell .tabs__item a:hover { color: #c0392b; }
+
+    /* Topic list */
+    .widget-shell .topic-list-item-card {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      position: relative;
+    }
+    .widget-shell .topic-list-item-card:last-child { border-bottom: none; }
+    .widget-shell .topic-list-item-card--sticky { background: #fafafa; }
+
+    .widget-shell .topic-list-item-card_header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .widget-shell .profilepicture img {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .widget-shell .topic-list-item-card_header_metadata {
+      flex: 1;
+    }
+    .widget-shell .qa-username {
+      font-size: 12px;
+      font-weight: 700;
+      color: #333;
+      text-decoration: none;
+    }
+    .widget-shell .qa-username:hover { text-decoration: underline; }
+    .widget-shell .user-title { font-size: 11px; color: #999; margin-left: 6px; }
+    .widget-shell .topic-list-item-card_topic-location-link {
+      font-size: 11px;
+      color: #888;
+      text-decoration: none;
+    }
+    .widget-shell .topic-list-item-card_topic-location-link:hover { color: #c0392b; }
+    .widget-shell .topic-list-item-card_topic-name { font-weight: 600; }
+
+    .widget-shell .topic-list-item-card_body {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .widget-shell .topic-list-item-card_title-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #222;
+      display: block;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .widget-shell .topic-list-item-card_title-text:hover { color: #c0392b; }
+    .widget-shell .topic-list-item-card_text-preview {
+      font-size: 11px;
+      color: #777;
+      line-height: 1.5;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .widget-shell .topic-list-item-card_footer-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #999;
+    }
+    .widget-shell .topic-list-item-card_topic-metrics {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .widget-shell .thread-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #aaa;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .widget-shell .thread-meta-item:hover { color: #c0392b; }
+    .widget-shell .icon--thumb-up::before { content: "👍"; font-size: 11px; }
+    .widget-shell .thread-meta-item__icon { width: 14px; height: 14px; }
+    .widget-shell time { font-size: 11px; color: #bbb; }
+
+    /* sticky pin */
+    .widget-shell .topic-view_sticky-flag {
+      position: absolute;
+      top: 0; left: 0;
+      color: #c0392b;
+      opacity: .6;
+    }
+
+    /* pill badges */
+    .widget-shell .pill {
+      display: inline-block;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: #edf2fb;
+      color: #3a6dbf;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Load more */
+    .widget-shell .btn--load-more {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #f5f5f5;
+      border: none;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c0392b;
+      cursor: pointer;
+      text-align: center;
+    }
+    .widget-shell .btn--load-more:hover { background: #ffe8e6; }
+
+    /* hide the categories tab content & unanswered tab for brevity */
+    .js-content-2, .js-content-3 { display: none; }
+
+    /* ── Demo annotation banner ── */
+    .demo-note {
+      background: #fffbe6;
+      border: 1px solid #f5c842;
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 13px;
+      color: #7a5c00;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    .demo-note strong { color: #5a3e00; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #222;
+      color: #aaa;
+      text-align: center;
+      padding: 24px 40px;
+      font-size: 12px;
+      margin-top: 60px;
+    }
+    .site-footer a { color: #ccc; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .page-body { grid-template-columns: 1fr; }
+      .community-sidebar { order: -1; }
+      .promo-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PROSPECT WEBSITE SHELL
+═══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="logo">AARP</div>
+  <nav>
+    <a href="#">Benefits</a>
+    <a href="#">Health</a>
+    <a href="#">Money</a>
+    <a href="#">Entertainment</a>
+    <a href="#community-widget">Community</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Welcome Back, Member</h1>
+  <p>Access your benefits, connect with peers, and discover everything AARP has to offer — all in one place.</p>
+</section>
+
+<div class="page-body">
+
+  <!-- ── Left: main website content ── -->
+  <div class="main-content">
+
+    <div class="demo-note">
+      <strong>Gainsight CC Demo:</strong> The "Community Discussions" widget on the right is community content
+      embedded directly into this website page — no separate tab, no redirect.
+      Powered by Gainsight Customer Communities iFrame integration.
+    </div>
+
+    <h2>Member Benefits Spotlight</h2>
+    <p>
+      As an AARP member you have access to hundreds of exclusive discounts, health resources,
+      financial tools, and a thriving online community. Explore what's new this month below.
+    </p>
+
+    <div class="promo-cards">
+      <div class="promo-card">
+        <div class="icon">💊</div>
+        <h3>Prescription Discounts</h3>
+        <p>Save up to 80% at over 68,000 pharmacies nationwide with your AARP Rx card.</p>
+      </div>
+      <div class="promo-card">
+        <div class="icon">🏥</div>
+        <h3>AARP Health Tools</h3>
+        <p>Track your wellness goals, find doctors, and access telehealth visits from home.</p>
+      </div>
+      <div class="promo-card">
+        <div class="icon">✈️</div>
+        <h3>Travel Deals</h3>
+        <p>Exclusive member pricing on hotels, cruises, and car rentals year-round.</p>
+      </div>
+      <div class="promo-card">
+        <div class="icon">💰</div>
+        <h3>Financial Resources</h3>
+        <p>Free tax prep assistance, fraud alerts, and retirement planning calculators.</p>
+      </div>
+    </div>
+
+    <h2>Latest Articles</h2>
+    <p>Stay informed with curated content from AARP's team of experts on health, finance, and lifestyle topics most relevant to you.</p>
+    <p style="color:#bbb;font-style:italic;font-size:13px;">Article feed would appear here…</p>
+
+  </div>
+
+  <!-- ── Right: Gainsight CC community widget (injected component HTML) ── -->
+  <aside class="community-sidebar" id="community-widget">
+
+    <div class="gs-badge">
+      <div class="dot"></div>
+      Powered by <span class="brand">&nbsp;Gainsight CC</span>
+    </div>
+
+    <div class="widget-shell">
+
+      <!-- Widget content taken directly from the Gainsight CC community widget -->
+      <div class="col">
+        <h2 class="widget__heading">Discussions</h2>
+        <h3 class="widget__subheading">Recent Posts</h3>
+
+        <div class="box pagebox box--unbox">
+          <div class="box__content">
+            <div class="module widget--tabs tabs">
+
+              <!-- Tab nav -->
+              <nav class="sections__nav">
+                <div class="tabs--nav__container">
+                  <div class="tabs--nav">
+                    <ul class="tabs--navigation">
+                      <li class="tabs__item"><a href="https://aarp-en-community.insided.com/activity/recent" class="is-active" target="_blank">Recent activity</a></li>
+                      <li class="tabs__item"><a href="https://aarp-en-community.insided.com/activity/unanswered" target="_blank">Help others</a></li>
+                      <li class="tabs__item"><a href="https://aarp-en-community.insided.com/" target="_blank">Categories</a></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Recent activity tab content -->
+                <div class="tabs--navigation">
+                  <div class="tabs">
+                    <div class="js-content js-content-1">
+                      <div class="box widget box__content topic-list-view">
+                        <div class="list-widget-wrapper">
+
+                          <!-- Topic 1 -->
+                          <div class="topic-list-item-card">
+                            <div class="topic-list-item-card_info-container">
+                              <div class="topic-list-item-card_header">
+                                <div class="topic-list-item-card_user-image-container">
+                                  <div class="profilepicture">
+                                    <a href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">
+                                      <img alt="Dana" src="https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/e2bc3728-8c78-4abc-9111-e1efe3616884.png">
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="topic-list-item-card_header_metadata">
+                                  <div class="topic-list-item-card_header_user-info">
+                                    <a class="qa-username" href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">Dana</a>
+                                    <span class="user-title">New Participant</span>
+                                  </div>
+                                  <div>
+                                    <a href="https://aarp-en-community.insided.com/games-talk-2" class="topic-list-item-card_topic-location-link" target="_blank">
+                                      <span>posted in </span><span class="topic-list-item-card_topic-name">Games Talk</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <a href="https://aarp-en-community.insided.com/games-talk-2/new-to-our-community-introduce-yourself-25" class="topic-list-item-card_body" target="_blank">
+                                <div class="topic-list-item-card_body_main">
+                                  <div>
+                                    <span class="topic-list-item-card_title-text">New to our Community? Introduce yourself!</span>
+                                  </div>
+                                  <div class="topic-list-item-card_text-preview">Hey Community-friends! We thought it might be fun to know who's who while we're actively engaging on our community…</div>
+                                </div>
+                              </a>
+                              <div class="topic-list-item-card_footer-container">
+                                <div class="topic-list-item-card_topic-metrics">
+                                  <button class="thread-meta-item" aria-label="Like">
+                                    <i class="icon--thumb-up"></i><span>0</span>
+                                  </button>
+                                  <span class="thread-meta-item">
+                                    <svg width="14" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+                                    <span>3</span>
+                                  </span>
+                                </div>
+                                <time datetime="2026-04-21T14:14:28.000Z">53 minutes ago</time>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Topic 2 -->
+                          <div class="topic-list-item-card">
+                            <div class="topic-list-item-card_info-container">
+                              <div class="topic-list-item-card_header">
+                                <div class="topic-list-item-card_user-image-container">
+                                  <div class="profilepicture">
+                                    <a href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">
+                                      <img alt="Dana" src="https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/e2bc3728-8c78-4abc-9111-e1efe3616884.png">
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="topic-list-item-card_header_metadata">
+                                  <div class="topic-list-item-card_header_user-info">
+                                    <a class="qa-username" href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">Dana</a>
+                                    <span class="user-title">New Participant</span>
+                                  </div>
+                                  <div>
+                                    <a href="https://aarp-en-community.insided.com/leisure-lifestyle-46" class="topic-list-item-card_topic-location-link" target="_blank">
+                                      <span>published in </span><span class="topic-list-item-card_topic-name">Leisure &amp; Lifestyle</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <a href="https://aarp-en-community.insided.com/leisure-lifestyle-46/san-ramon-library-jazz-on-nov-15-allan-harris-jazz-meets-poetry-82" class="topic-list-item-card_body" target="_blank">
+                                <div class="topic-list-item-card_body_main">
+                                  <span class="topic-list-item-card_title-text">San Ramon Library Jazz on NOV 15: Allan Harris ✦ Jazz Meets Poetry</span>
+                                  <div class="topic-list-item-card_text-preview">An upcoming jazz and poetry event at the San Ramon Library — share your thoughts and RSVP in the community!</div>
+                                </div>
+                              </a>
+                              <div class="topic-list-item-card_footer-container">
+                                <div class="topic-list-item-card_topic-metrics">
+                                  <button class="thread-meta-item" aria-label="Like"><i class="icon--thumb-up"></i><span>0</span></button>
+                                  <span class="thread-meta-item">
+                                    <svg width="14" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+                                    <span>0</span>
+                                  </span>
+                                </div>
+                                <time>5 months ago</time>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Topic 3 -->
+                          <div class="topic-list-item-card">
+                            <div class="topic-list-item-card_info-container">
+                              <div class="topic-list-item-card_header">
+                                <div class="topic-list-item-card_user-image-container">
+                                  <div class="profilepicture">
+                                    <a href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">
+                                      <img alt="Dana" src="https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/e2bc3728-8c78-4abc-9111-e1efe3616884.png">
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="topic-list-item-card_header_metadata">
+                                  <div class="topic-list-item-card_header_user-info">
+                                    <a class="qa-username" href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">Dana</a>
+                                    <span class="user-title">New Participant</span>
+                                  </div>
+                                  <div>
+                                    <a href="https://aarp-en-community.insided.com/rock-n-roll-45" class="topic-list-item-card_topic-location-link" target="_blank">
+                                      <span>published in </span><span class="topic-list-item-card_topic-name">Rock N' Roll</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <a href="https://aarp-en-community.insided.com/rock-n-roll-45/best-concert-you-ve-gone-to-or-want-to-go-to-81" class="topic-list-item-card_body" target="_blank">
+                                <div class="topic-list-item-card_body_main">
+                                  <span class="topic-list-item-card_title-text">Best Concert You've Gone To — Or Want To Go To?</span>
+                                  <div class="topic-list-item-card_text-preview">For me it would have to be James Taylor, at Red Rocks Amphitheatre in Colorado. Billy Joel and Bruce would be next on my list…</div>
+                                </div>
+                              </a>
+                              <div class="topic-list-item-card_footer-container">
+                                <div class="topic-list-item-card_topic-metrics">
+                                  <button class="thread-meta-item" aria-label="Like"><i class="icon--thumb-up"></i><span>0</span></button>
+                                  <span class="thread-meta-item">
+                                    <svg width="14" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+                                    <span>0</span>
+                                  </span>
+                                </div>
+                                <time>5 months ago</time>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Topic 4 -->
+                          <div class="topic-list-item-card">
+                            <div class="topic-list-item-card_info-container">
+                              <div class="topic-list-item-card_header">
+                                <div class="topic-list-item-card_user-image-container">
+                                  <div class="profilepicture">
+                                    <a href="https://aarp-en-community.insided.com/members/igor-1" target="_blank">
+                                      <img alt="Igor" src="https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/bef14966-7652-4c92-93af-d4dea5123d2f.png">
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="topic-list-item-card_header_metadata">
+                                  <div class="topic-list-item-card_header_user-info">
+                                    <a class="qa-username" href="https://aarp-en-community.insided.com/members/igor-1" target="_blank">Igor</a>
+                                    <span class="user-title">Pioneer</span>
+                                  </div>
+                                  <div>
+                                    <a href="https://aarp-en-community.insided.com/grief-loss-43" class="topic-list-item-card_topic-location-link" target="_blank">
+                                      <span>published in </span><span class="topic-list-item-card_topic-name">Grief &amp; Loss</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <a href="https://aarp-en-community.insided.com/grief-loss-43/finding-the-right-grief-support-group-for-healing-aarp-article-80" class="topic-list-item-card_body" target="_blank">
+                                <div class="topic-list-item-card_body_main">
+                                  <span class="topic-list-item-card_title-text">📋 Finding the Right Grief Support Group for Healing (AARP Article)</span>
+                                  <div class="topic-list-item-card_text-preview">Experts share insights on choosing the best national or local community for comfort after your loss — a discussion thread to share experiences.</div>
+                                </div>
+                              </a>
+                              <div class="topic-list-item-card_footer-container">
+                                <div class="topic-list-item-card_topic-metrics">
+                                  <button class="thread-meta-item" aria-label="Like"><i class="icon--thumb-up"></i><span>0</span></button>
+                                  <span class="thread-meta-item">
+                                    <svg width="14" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+                                    <span>0</span>
+                                  </span>
+                                </div>
+                                <time>5 months ago</time>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Topic 5 – Sticky -->
+                          <div class="topic-list-item-card topic-list-item-card--sticky">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="14" viewBox="0 0 14 18" fill="currentColor" class="topic-view_sticky-flag"><path d="M14 0H0V18L7 15L14 18V0Z"/></svg>
+                            <div class="topic-list-item-card_info-container">
+                              <div class="topic-list-item-card_header">
+                                <div class="topic-list-item-card_user-image-container">
+                                  <div class="profilepicture">
+                                    <a href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">
+                                      <img alt="Dana" src="https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/e2bc3728-8c78-4abc-9111-e1efe3616884.png">
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="topic-list-item-card_header_metadata">
+                                  <div class="topic-list-item-card_header_user-info">
+                                    <a class="qa-username" href="https://aarp-en-community.insided.com/members/dana-3" target="_blank">Dana</a>
+                                    <span class="user-title">New Participant</span>
+                                  </div>
+                                  <div>
+                                    <a href="https://aarp-en-community.insided.com/general-information-14" class="topic-list-item-card_topic-location-link" target="_blank">
+                                      <span>published in </span><span class="topic-list-item-card_topic-name">General information</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <a href="https://aarp-en-community.insided.com/general-information-14/new-to-the-community-here-s-everything-you-need-to-know-21" class="topic-list-item-card_body" target="_blank">
+                                <div class="topic-list-item-card_body_main">
+                                  <span class="topic-list-item-card_title-text">New to the Community? Here's everything you need to know! <span class="pill">Getting started</span></span>
+                                  <div class="topic-list-item-card_text-preview">Is this your first visit to our lovely company community? Welcome! We're super happy to have you here…</div>
+                                </div>
+                              </a>
+                              <div class="topic-list-item-card_footer-container">
+                                <div class="topic-list-item-card_topic-metrics">
+                                  <button class="thread-meta-item" aria-label="Like"><i class="icon--thumb-up"></i><span>1</span></button>
+                                  <span class="thread-meta-item">
+                                    <svg width="14" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+                                    <span>0</span>
+                                  </span>
+                                </div>
+                                <time>5 months ago</time>
+                              </div>
+                            </div>
+                          </div>
+
+                          <button class="btn--load-more" onclick="window.open('https://aarp-en-community.insided.com/activity/recent','_blank')">
+                            Show more activity
+                          </button>
+
+                        </div><!-- list-widget-wrapper -->
+                      </div>
+                    </div><!-- js-content-1 -->
+                  </div>
+                </div>
+
+              </nav>
+            </div><!-- module -->
+          </div>
+        </div>
+      </div><!-- .col -->
+
+    </div><!-- widget-shell -->
+
+  </aside>
+
+</div><!-- page-body -->
+
+<footer class="site-footer">
+  <p>© 2026 AARP — All rights reserved &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Contact Us</a></p>
+  <p style="margin-top:6px;font-size:11px;opacity:.6;">
+    Community widget powered by <strong>Gainsight Customer Communities</strong> — embedded via iFrame / Web Component integration
+  </p>
+</footer>
+
+</body>
+</html>

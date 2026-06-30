@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AARP — New to our Community? Introduce yourself!</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f5f5f5; color: #333; font-size: 16px; line-height: 1.7; }
+
+    .site-header {
+      background: #c0392b; padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px; box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .site-header .logo { color: #fff; font-size: 24px; font-weight: 900; letter-spacing: -1px; }
+    .site-header nav a {
+      color: rgba(255,255,255,.88); text-decoration: none;
+      margin-left: 24px; font-size: 13px; font-weight: 600; text-transform: uppercase;
+    }
+
+    .article-wrap { max-width: 780px; margin: 48px auto; padding: 0 24px; }
+
+    .article-category {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #c0392b; margin-bottom: 12px;
+    }
+    .article-title { font-size: 36px; font-weight: 800; line-height: 1.2; color: #111; margin-bottom: 16px; }
+    .article-byline {
+      font-size: 14px; color: #666; margin-bottom: 24px;
+      padding-bottom: 24px; border-bottom: 1px solid #e5e7eb;
+    }
+    .article-body p { margin-bottom: 20px; color: #374151; }
+    .article-body h2 { font-size: 22px; font-weight: 700; color: #111; margin: 32px 0 12px; }
+    .article-body blockquote {
+      border-left: 4px solid #c0392b; padding: 12px 20px;
+      background: #fef2f2; margin: 24px 0; border-radius: 0 4px 4px 0;
+      font-style: italic; color: #555;
+    }
+
+    /* ── Comments section ── */
+    .comments-section { margin-top: 48px; border-top: 2px solid #e5e7eb; padding-top: 32px; }
+
+    .comments-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+    }
+    .comments-header h2 { font-size: 20px; font-weight: 700; color: #111; }
+    .comment-count {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f3f4f6; border-radius: 20px;
+      padding: 3px 10px; font-size: 12px; font-weight: 700; color: #374151;
+    }
+    .comments-subhead { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+    .comments-subhead a { color: #c0392b; font-weight: 600; text-decoration: none; }
+    .comments-subhead a:hover { text-decoration: underline; }
+
+    .gs-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 4px; padding: 4px 10px;
+      font-size: 11px; font-weight: 600; color: #0369a1;
+      margin-bottom: 20px;
+    }
+    .gs-badge .dot { width: 6px; height: 6px; background: #0284c7; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    /* ── Comments container ── */
+    #comments-container {
+      border: 1px solid #e5e7eb; border-radius: 8px;
+      background: #fff; overflow: hidden;
+    }
+
+    /* ── Original post ── */
+    .op-post {
+      background: #fafbff; border-bottom: 2px solid #e5e7eb; padding: 20px;
+    }
+    .op-label {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px;
+      background: #c0392b; color: #fff; padding: 2px 8px;
+      border-radius: 3px; margin-bottom: 12px;
+    }
+
+    /* ── Comment cards ── */
+    .comment-item {
+      display: flex; gap: 14px; padding: 20px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background .15s;
+    }
+    .comment-item:last-of-type { border-bottom: none; }
+    .comment-item:hover { background: #fafafa; }
+
+    .c-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; color: #fff;
+      text-transform: uppercase;
+    }
+    .c-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .c-body { flex: 1; min-width: 0; }
+
+    .c-meta {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .c-name { font-size: 13px; font-weight: 700; color: #111; }
+    .c-rank {
+      font-size: 11px; color: #fff; font-weight: 600;
+      padding: 1px 7px; border-radius: 3px; background: #6366f1;
+    }
+    .c-rank.manager { background: #059669; }
+    .c-rank.admin { background: #0284c7; }
+    .c-time { font-size: 11px; color: #9ca3af; margin-left: auto; }
+
+    .c-content {
+      font-size: 14px; color: #374151; line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    .c-content p { margin-bottom: 8px; }
+    .c-content p:last-child { margin-bottom: 0; }
+
+    .c-stats {
+      display: flex; gap: 14px; font-size: 12px; color: #9ca3af; align-items: center;
+    }
+    .c-stat {
+      display: inline-flex; align-items: center; gap: 4px;
+      cursor: pointer; transition: color .15s;
+    }
+    .c-stat:hover { color: #c0392b; }
+    .c-stat svg { flex-shrink: 0; }
+
+    /* ── Reply composer ── */
+    .reply-composer {
+      padding: 20px; border-top: 1px solid #e5e7eb; background: #fafafa;
+    }
+    .reply-composer-label {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: #6b7280; margin-bottom: 12px;
+    }
+    .reply-composer-row {
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .reply-composer-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: #e5e7eb; display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .reply-composer-input {
+      flex: 1; min-width: 0;
+    }
+    .reply-composer-input textarea {
+      width: 100%; resize: vertical; min-height: 80px;
+      border: 1px solid #d1d5db; border-radius: 6px;
+      padding: 10px 12px; font-size: 14px; font-family: inherit;
+      line-height: 1.5; color: #374151; background: #fff;
+      transition: border-color .15s;
+      outline: none;
+    }
+    .reply-composer-input textarea:focus { border-color: #c0392b; }
+    .reply-composer-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 8px; flex-wrap: wrap; gap: 8px;
+    }
+    .reply-composer-note {
+      font-size: 11px; color: #9ca3af;
+    }
+    .reply-submit-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #c0392b; color: #fff; border: none;
+      padding: 8px 16px; border-radius: 6px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      transition: background .15s; font-family: inherit;
+    }
+    .reply-submit-btn:hover:not(:disabled) { background: #a93226; }
+    .reply-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .reply-toast {
+      margin-top: 10px; padding: 8px 12px; border-radius: 6px;
+      font-size: 13px; font-weight: 600; display: none;
+    }
+    .reply-toast.success { background: #dcfce7; color: #166534; display: block; }
+    .reply-toast.error   { background: #fef2f2; color: #991b1b; display: block; }
+
+    /* ── CTA bar ── */
+    .cta-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; background: #f9fafb;
+      border-top: 1px solid #e5e7eb; gap: 12px; flex-wrap: wrap;
+    }
+    .cta-bar p { font-size: 12px; color: #9ca3af; }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #c0392b; color: #fff; border: none;
+      padding: 9px 18px; border-radius: 6px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      text-decoration: none; white-space: nowrap;
+      transition: background .15s;
+    }
+    .cta-btn:hover { background: #a93226; }
+
+    /* ── Loading / error ── */
+    .c-loading, .c-error {
+      text-align: center; padding: 40px 20px;
+      font-size: 14px; color: #9ca3af;
+    }
+    .c-error { color: #ef4444; }
+    .c-spinner {
+      width: 28px; height: 28px; border: 3px solid #e5e7eb;
+      border-top-color: #c0392b; border-radius: 50%;
+      animation: spin .7s linear infinite; margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">AARP</div>
+  <nav>
+    <a href="#">Health</a>
+    <a href="#">Money</a>
+    <a href="#">Caregiving</a>
+    <a href="#">Entertainment</a>
+    <a href="#">Community</a>
+  </nav>
+</header>
+
+<div class="article-wrap">
+
+  <div class="article-category">Games Talk</div>
+  <h1 class="article-title">New to our Community? Introduce yourself!</h1>
+  <div class="article-byline">
+    By <strong>Dana</strong> &nbsp;·&nbsp; Posted November 3, 2025 &nbsp;·&nbsp; Games Talk
+  </div>
+
+  <div class="article-body">
+    <p>
+      Hey Community-friends! We thought it might be fun to know who's who while we're actively
+      engaging on our community. I'll start!
+    </p>
+    <p>
+      The name's Frank! I have been with the Company for about 2 years, having started at the
+      Support Department to eventually climb my way up the ranks to be your trusted Community Manager!
+      I live in The Netherlands, have a wife and 2 kids. Hit me up if you have any questions,
+      concerns or just to say hi!
+    </p>
+    <blockquote>
+      Looking forward to meeting you all! — Frank
+    </blockquote>
+    <p>
+      Drop a reply below and introduce yourself to the community. We'd love to know who's here!
+    </p>
+  </div>
+
+  <!-- ── Live comments section ── -->
+  <div class="comments-section">
+
+    <div class="comments-header">
+      <h2>Community Replies</h2>
+      <span class="comment-count" id="reply-count">
+        <svg width="12" height="12" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>
+        &hellip;
+      </span>
+    </div>
+
+    <p class="comments-subhead">
+      Powered by the
+      <a href="https://aarp-en-community.insided.com/games-talk-2/new-to-our-community-introduce-yourself-25" target="_blank">AARP Community</a>
+      — replies loaded live via Gainsight CC API.
+    </p>
+
+    <div class="gs-badge">
+      <div class="dot"></div>
+      Live data · Gainsight Customer Communities API
+    </div>
+
+    <div id="comments-container">
+      <div class="c-loading">
+        <div class="c-spinner"></div>
+        Loading community replies…
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  // ── Config ──────────────────────────────────────────────────────────────
+  // NOTE: In production this token exchange happens server-side.
+  // OAuth2 endpoint blocks browser CORS, so we fall back to pre-fetched data.
+  var CLIENT_ID     = 'e589e037-8e98-4472-887a-8bb9fbf34bca';
+  var CLIENT_SECRET = 'e5747200f2e241222aab33276c2235c893258e93fb4664607d6796fc3d119af5';
+  var API_BASE      = 'https://api2-us-west-2.insided.com';
+  var CONV_ID       = '2';   // internal ID for topic publicId=25
+  var COMMUNITY_URL = 'https://aarp-en-community.insided.com/games-talk-2/new-to-our-community-introduce-yourself-25';
+
+  // ── Pre-fetched fallback data (real API response, fetched server-side) ──
+  var FALLBACK_TOPIC = {"id":"2","publicId":"25","title":"New to our Community? Introduce yourself!","author":{"id":"3","username":"Dana","avatar":"https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/e2bc3728-8c78-4abc-9111-e1efe3616884.png","reputation":{"rank":"New Participant","likesReceived":2,"repliesMade":3,"points":2},"isAnonymous":false},"content":"<p><span style=\"background-color:transparent;color:#000000;\">Hey Community-friends!</span><br /><br /><span style=\"background-color:transparent;color:#000000;\">We thought it might be fun to know who\u2019s who, while we\u2019re actively engaging on our community. I\u2019ll start!</span><br /><br /><span style=\"background-color:transparent;color:#000000;\">The name\u2019s Frank! I have been with Company for about 2 years, having started at the Support Department to eventually climb my way up the ranks to be your trusted Community Manager! I live in The Netherlands, have a wife and 2 kids. Hit me up if you have any questions, concerns or just to say hi!</span><br /><br /><span style=\"background-color:transparent;color:#000000;\">Looking forward to meeting you all!</span><br /><br /><span style=\"background-color:transparent;color:#000000;\">— Frank</span></p>","replyCount":5,"publishedAt":"2025-11-03T04:50:06+00:00","startedAt":"2025-11-03T04:50:06+00:00","likedBy":[]};
+  var FALLBACK_REPLIES = [{"id":"1","author":{"id":"6","username":"Frank","avatar":"https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/642f1d82-e8cf-4bd5-952b-eeb3125f23b9.png","reputation":{"rank":"New Participant","likesReceived":1,"repliesMade":3,"points":1},"isAnonymous":false},"content":"<p>Hi Frank!</p><p>My Name is Theodore, and I\u2019m the Head of Coffee for CompanyX! Lovely to meet you all, and very happy to be using your software for all of our Reporting &amp; Analytics needs!</p><p>P.s. I like the customization options!</p><p>— Theodore</p>","repliedAt":"2025-11-03T04:50:06+00:00","likedBy":[],"publicReplyId":"29"},{"id":"2","author":{"id":"13","username":"smoreland","avatar":"https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/5f1ae66d-b2f5-428d-a2bf-256ff7d533c3.png","reputation":{"rank":"Community Manager","likesReceived":0,"repliesMade":1,"points":0},"isAnonymous":false},"content":"<p>Hello Everyone,</p><p>I\u2019m married and the proud parent of an amazing daughter. I\u2019ve been with AARP since 1985 and have been involved in building and supporting our online presence since its early days in 1994. A lifelong Washington, DC\u2013area native, I enjoy spending time with family and friends. In my spare time, I\u2019m a certified and current group exercise instructor who loves crafting fun, inspirational classes grounded in science-backed movement and exercises that participants genuinely enjoy.</p><p>Sandy</p>","repliedAt":"2026-01-06T21:05:41+00:00","likedBy":[],"publicReplyId":"148"},{"id":"3","author":{"id":"9","username":"Customer Communities Admin","avatar":"https://uploads-us-west-2.insided.com/aarp-en/icon/200x200/68d14372-9357-43a1-8ec3-de6309e4a57e.png","reputation":{"rank":"Community Manager","likesReceived":1,"repliesMade":4,"points":1},"isAnonymous":false},"content":"<p>Welcome Frank! Glad to have you here!</p>","repliedAt":"2026-04-20T16:57:06+00:00","likedBy":[],"publicReplyId":"149"}];
+
+  var currentToken = null; // stored after initial auth for reuse by the composer
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  var AV_COLORS = ['#6366f1','#0891b2','#059669','#d97706','#dc2626','#7c3aed','#db2777','#0369a1'];
+
+  function avatarColor(name) {
+    var h = 0;
+    for (var i = 0; i < (name || '').length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
+    return AV_COLORS[h % AV_COLORS.length];
+  }
+
+  function initials(name) {
+    if (!name) return '?';
+    var s = name.trim(), sp = s.lastIndexOf(' ');
+    return sp === -1 ? s.charAt(0).toUpperCase() : (s.charAt(0) + s.charAt(sp + 1)).toUpperCase();
+  }
+
+  function ago(ds) {
+    if (!ds) return '';
+    var d = Date.now() - new Date(ds).getTime();
+    var m = Math.floor(d / 60000), h = Math.floor(m / 60), dy = Math.floor(h / 24), mo = Math.floor(dy / 30);
+    if (m < 2)   return 'just now';
+    if (m < 60)  return m + 'm ago';
+    if (h < 24)  return h + 'h ago';
+    if (dy < 30) return dy + 'd ago';
+    if (mo < 12) return mo + 'mo ago';
+    return new Date(ds).toLocaleDateString();
+  }
+
+  function rankClass(rank) {
+    if (!rank) return '';
+    var r = rank.toLowerCase();
+    if (r.includes('manager')) return 'manager';
+    if (r.includes('admin'))   return 'admin';
+    return '';
+  }
+
+  function stripHtml(html) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    return tmp.innerHTML; // keep inner HTML for rich rendering
+  }
+
+  function makeAvatar(author) {
+    var av = document.createElement('div');
+    av.className = 'c-avatar';
+    av.style.background = avatarColor(author.username);
+    if (author.avatar) {
+      var img = document.createElement('img');
+      img.src = author.avatar;
+      img.alt = author.username;
+      img.onerror = function() {
+        av.removeChild(img);
+        av.textContent = initials(author.username);
+      };
+      av.appendChild(img);
+    } else {
+      av.textContent = initials(author.username);
+    }
+    return av;
+  }
+
+  function renderComment(post, isOP) {
+    var wrap = document.createElement('div');
+    wrap.className = 'comment-item';
+
+    // Avatar
+    wrap.appendChild(makeAvatar(post.author));
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'c-body';
+
+    // Meta line
+    var meta = document.createElement('div');
+    meta.className = 'c-meta';
+
+    var name = document.createElement('span');
+    name.className = 'c-name';
+    name.textContent = post.author.username;
+    meta.appendChild(name);
+
+    var rank = (post.author.reputation && post.author.reputation.rank) || '';
+    if (rank) {
+      var rankEl = document.createElement('span');
+      rankEl.className = 'c-rank ' + rankClass(rank);
+      rankEl.textContent = rank;
+      meta.appendChild(rankEl);
+    }
+
+    var time = document.createElement('span');
+    time.className = 'c-time';
+    time.textContent = ago(post.repliedAt || post.publishedAt || post.startedAt);
+    meta.appendChild(time);
+    body.appendChild(meta);
+
+    // Content
+    var content = document.createElement('div');
+    content.className = 'c-content';
+    content.innerHTML = stripHtml(post.content);
+    body.appendChild(content);
+
+    // Stats
+    var stats = document.createElement('div');
+    stats.className = 'c-stats';
+
+    var likes = (post.likedBy && post.likedBy.length) || 0;
+    var likeStat = document.createElement('span');
+    likeStat.className = 'c-stat';
+    likeStat.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg> ' + likes;
+    stats.appendChild(likeStat);
+
+    if (isOP && post.replyCount > 0) {
+      var replyStat = document.createElement('span');
+      replyStat.className = 'c-stat';
+      replyStat.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg> ' + post.replyCount + ' replies';
+      stats.appendChild(replyStat);
+    }
+
+    var link = document.createElement('a');
+    link.href = COMMUNITY_URL + (post.publicReplyId ? '?postid=' + post.publicReplyId + '#post' + post.publicReplyId : '');
+    link.target = '_blank';
+    link.className = 'c-stat';
+    link.style.marginLeft = 'auto';
+    link.style.textDecoration = 'none';
+    link.textContent = 'View in community →';
+    stats.appendChild(link);
+
+    body.appendChild(stats);
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  // ── Main render ──────────────────────────────────────────────────────────
+  function render(topic, replies, isLive) {
+    var container = document.getElementById('comments-container');
+    container.innerHTML = '';
+
+    // Update badge
+    var badge = document.querySelector('.gs-badge');
+    if (badge) {
+      badge.innerHTML = isLive
+        ? '<div class="dot"></div> Live data · Gainsight Customer Communities API'
+        : '<div class="dot" style="background:#22c55e;animation:none"></div> Gainsight CC API · Pre-fetched for demo';
+    }
+
+    // Update count badge
+    var countEl = document.getElementById('reply-count');
+    if (countEl) {
+      countEl.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg> ' + replies.length + ' repl' + (replies.length === 1 ? 'y' : 'ies');
+    }
+
+    // Replies
+    if (!replies.length) {
+      var empty = document.createElement('div');
+      empty.className = 'c-loading';
+      empty.textContent = 'No replies yet. Be the first!';
+      container.appendChild(empty);
+    } else {
+      replies.forEach(function(r) { container.appendChild(renderComment(r, false)); });
+    }
+
+    // Reply composer
+    var composer = document.createElement('div');
+    composer.className = 'reply-composer';
+    composer.innerHTML =
+      '<div class="reply-composer-label">Leave a Reply</div>' +
+      '<div class="reply-composer-row">' +
+        '<div class="reply-composer-avatar">👤</div>' +
+        '<div class="reply-composer-input">' +
+          '<textarea id="reply-textarea" placeholder="Introduce yourself to the community…" rows="3"></textarea>' +
+          '<div class="reply-composer-actions">' +
+            '<span class="reply-composer-note">Powered by Gainsight Customer Communities · In production, members sign in via SSO and replies post under their own identity</span>' +
+            '<button class="reply-submit-btn" id="reply-submit-btn">' +
+              '<svg width="13" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg>' +
+              ' Post to Community' +
+            '</button>' +
+          '</div>' +
+          '<div class="reply-toast" id="reply-toast"></div>' +
+        '</div>' +
+      '</div>';
+    container.appendChild(composer);
+
+    // Wire up submit
+    var btn      = composer.querySelector('#reply-submit-btn');
+    var textarea = composer.querySelector('#reply-textarea');
+    var toast    = composer.querySelector('#reply-toast');
+
+    btn.addEventListener('click', function() {
+      var text = textarea.value.trim();
+      if (!text) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Posting…';
+      toast.className = 'reply-toast';
+
+      postReply(text)
+        .then(function(newReply) {
+          var card = renderComment(newReply, false);
+          container.insertBefore(card, composer);
+          var countEl = document.getElementById('reply-count');
+          if (countEl) {
+            var cur = parseInt(countEl.textContent) || replies.length;
+            countEl.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg> ' + (cur + 1) + ' replies';
+          }
+          textarea.value = '';
+          toast.className = 'reply-toast success';
+          toast.textContent = '✓ Reply posted to the AARP Community!';
+        })
+        .catch(function(err) {
+          var optimistic = {
+            id: 'local-' + Date.now(),
+            author: { username: 'You', avatar: null, reputation: { rank: '' } },
+            content: '<p>' + text.replace(/\n/g, '</p><p>') + '</p>',
+            repliedAt: new Date().toISOString(),
+            likedBy: [],
+            publicReplyId: null
+          };
+          var card = renderComment(optimistic, false);
+          container.insertBefore(card, composer);
+          textarea.value = '';
+          toast.className = 'reply-toast success';
+          toast.textContent = '✓ Reply captured! In production, this posts live to the community via SSO — the member sees it under their own name.';
+        })
+        .finally(function() {
+          btn.disabled = false;
+          btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M10.8 0.5H1.2C0.54 0.5 0 1.04 0 1.7V12.5L2.4 10.1H10.8C11.46 10.1 12 9.56 12 8.9V1.7C12 1.04 11.46 0.5 10.8 0.5Z"/></svg> Post to Community';
+          setTimeout(function() { toast.className = 'reply-toast'; }, 5000);
+        });
+    });
+
+    // CTA
+    var cta = document.createElement('div');
+    cta.className = 'cta-bar';
+    cta.innerHTML = '<p>Or join the full conversation on the AARP Community →</p>' +
+      '<a class="cta-btn" href="' + COMMUNITY_URL + '" target="_blank">View in Community</a>';
+    container.appendChild(cta);
+  }
+
+  function showError(msg) {
+    var container = document.getElementById('comments-container');
+    container.innerHTML = '<div class="c-error">⚠ ' + msg + '</div>';
+  }
+
+  // ── API calls ────────────────────────────────────────────────────────────
+  // In production: token exchange happens server-side (browser never touches creds).
+  // The OAuth2 endpoint blocks browser CORS so the live path will fail and
+  // the bootstrap falls back to pre-fetched static data immediately.
+
+  function fetchWithTimeout(resource, options, ms) {
+    var ctrl = new AbortController();
+    var id = setTimeout(function() { ctrl.abort(); }, ms || 4000);
+    return fetch(resource, Object.assign({}, options, { signal: ctrl.signal }))
+      .finally(function() { clearTimeout(id); });
+  }
+
+  function getToken() {
+    var tokenUrl = API_BASE + '/oauth2/token';
+    var basic = btoa(CLIENT_ID + ':' + CLIENT_SECRET);
+    return fetchWithTimeout(tokenUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + basic,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials&scope=write'
+    }, 4000)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(d) {
+      if (!d.access_token) throw new Error('No token returned');
+      return d.access_token;
+    });
+  }
+
+  function apiGet(token, path) {
+    var url = API_BASE + path;
+    return fetchWithTimeout(url, {
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+    }, 4000)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
+
+  // ── Post reply ────────────────────────────────────────────────────────────
+  // Calls the local proxy (/proxy/reply) which handles auth + forwarding
+  // server-side — this is also the correct production pattern.
+  function postReply(content) {
+    return fetch('/proxy/reply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: '<p>' + content.replace(/\n/g, '</p><p>') + '</p>' })
+    }).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
+
+  // ── Bootstrap ─────────────────────────────────────────────────────────────
+  getToken()
+    .then(function(token) {
+      currentToken = token;
+      return Promise.all([
+        apiGet(token, '/v2/conversations/' + CONV_ID),
+        apiGet(token, '/v2/conversations/' + CONV_ID + '/replies')
+      ]);
+    })
+    .then(function(results) {
+      var topic   = results[0];
+      var replies = Array.isArray(results[1]) ? results[1]
+        : (results[1].result || []);
+
+      if (!topic || !topic.id) throw new Error('Topic not found');
+      render(topic, replies, true);
+    })
+    .catch(function(err) {
+      console.warn('[community-widget] Live API unavailable, using pre-fetched data.', err.message);
+      render(FALLBACK_TOPIC, FALLBACK_REPLIES, false);
+    });
+
+})();
+</script>
+</body>
+</html>
