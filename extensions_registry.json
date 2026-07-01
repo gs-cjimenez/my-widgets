@@ -1,6 +1,109 @@
 {
   "widgets": [
     {
+      "type": "learning_path_banner",
+      "title": "Learning Path Banner",
+      "version": "1.0.0",
+      "description": "A slim full-width banner promoting a learning path or course, with configurable colors, eyebrow label, title, icon, and CTA button.",
+      "category": "widgets",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/learning_path_banner",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          {
+            "name": "eyebrow_text",
+            "type": "text",
+            "label": "Eyebrow Label",
+            "defaultValue": "New Learning Path"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": "Title",
+            "defaultValue": "Analytics Fundamentals"
+          },
+          {
+            "name": "button_text",
+            "type": "text",
+            "label": "Button Text",
+            "defaultValue": "Start Learning"
+          },
+          {
+            "name": "button_url",
+            "type": "text",
+            "label": "Button URL",
+            "defaultValue": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation"
+          },
+          {
+            "name": "icon_url",
+            "type": "text",
+            "label": "Icon Image URL (leave blank for default)",
+            "defaultValue": ""
+          },
+          {
+            "name": "banner_bg_color",
+            "type": "color",
+            "label": "Banner Background Color",
+            "defaultValue": "#f0f4f8"
+          },
+          {
+            "name": "accent_color",
+            "type": "color",
+            "label": "Accent Color (bar, dot, eyebrow)",
+            "defaultValue": "#2563eb"
+          },
+          {
+            "name": "title_color",
+            "type": "color",
+            "label": "Title Color",
+            "defaultValue": "#111827"
+          },
+          {
+            "name": "icon_bg_color",
+            "type": "color",
+            "label": "Icon Background Color",
+            "defaultValue": "#1e293b"
+          },
+          {
+            "name": "button_bg_color",
+            "type": "color",
+            "label": "Button Background Color",
+            "defaultValue": "#1e293b"
+          },
+          {
+            "name": "button_text_color",
+            "type": "color",
+            "label": "Button Text Color",
+            "defaultValue": "#ffffff"
+          }
+        ]
+      },
+      "defaultConfig": {
+        "eyebrow_text": "New Learning Path",
+        "title": "Analytics Fundamentals",
+        "button_text": "Start Learning",
+        "button_url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation",
+        "icon_url": "",
+        "banner_bg_color": "#f0f4f8",
+        "accent_color": "#2563eb",
+        "title_color": "#111827",
+        "icon_bg_color": "#1e293b",
+        "button_bg_color": "#1e293b",
+        "button_text_color": "#ffffff"
+      }
+    },
+    {
       "category": "Demo",
       "configuration": {
         "properties": [
