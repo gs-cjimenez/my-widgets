@@ -56,6 +56,12 @@
             "type": "color",
             "label": "Accent Color",
             "defaultValue": "#1b3a6b"
+          },
+          {
+            "name": "cta_color",
+            "type": "color",
+            "label": "CTA Button Color",
+            "defaultValue": "#1b3a6b"
           }
         ]
       },
@@ -65,7 +71,8 @@
         "cta_label": "Explore Flows",
         "url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation",
         "logo_url": "",
-        "accent_color": "#1b3a6b"
+        "accent_color": "#1b3a6b",
+        "cta_color": "#1b3a6b"
       }
     },
     {

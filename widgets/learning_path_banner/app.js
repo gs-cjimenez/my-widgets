@@ -18,6 +18,11 @@ export async function init(sdk) {
       logoWrap.style.background = props.accent_color || '#1b3a6b'
     }
 
+    const ctaBtn = sdk.$('.cta-btn')
+    if (ctaBtn) {
+      ctaBtn.style.background = props.cta_color || '#1b3a6b'
+    }
+
     if (props.logo_url && logoWrap) {
       const existing = logoWrap.querySelector('img')
       if (!existing) {
