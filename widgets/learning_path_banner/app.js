@@ -23,6 +23,10 @@ export async function init(sdk) {
       ctaBtn.style.background = props.cta_color || '#1b3a6b'
     }
 
+    if (banner) {
+      banner.style.background = props.banner_bg_color || '#f0f4fa'
+    }
+
     if (props.logo_url && logoWrap) {
       const existing = logoWrap.querySelector('img')
       if (!existing) {

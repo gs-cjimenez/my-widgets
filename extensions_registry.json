@@ -62,6 +62,12 @@
             "type": "color",
             "label": "CTA Button Color",
             "defaultValue": "#1b3a6b"
+          },
+          {
+            "name": "banner_bg_color",
+            "type": "color",
+            "label": "Banner Background Color",
+            "defaultValue": "#f0f4fa"
           }
         ]
       },
@@ -72,7 +78,8 @@
         "url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation",
         "logo_url": "",
         "accent_color": "#1b3a6b",
-        "cta_color": "#1b3a6b"
+        "cta_color": "#1b3a6b",
+        "banner_bg_color": "#f0f4fa"
       }
     },
     {
