@@ -1,6 +1,74 @@
 {
   "widgets": [
     {
+      "type": "learning_path_banner",
+      "title": "Learning Path Banner",
+      "version": "1.0.0",
+      "description": "A slim banner promoting a new learning path or course, with configurable logo, title, eyebrow label, CTA text, and destination URL.",
+      "category": "iwidgets",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/learning_path_banner",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          {
+            "name": "eyebrow",
+            "type": "text",
+            "label": "Eyebrow Label",
+            "defaultValue": "New Learning Path"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": "Course / Path Title",
+            "defaultValue": "Databricks Analytics Fundamentals Accreditation"
+          },
+          {
+            "name": "cta_label",
+            "type": "text",
+            "label": "CTA Button Text",
+            "defaultValue": "Explore Flows"
+          },
+          {
+            "name": "url",
+            "type": "text",
+            "label": "Destination URL",
+            "defaultValue": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation"
+          },
+          {
+            "name": "logo_url",
+            "type": "text",
+            "label": "Logo Image URL (leave blank to hide)",
+            "defaultValue": ""
+          },
+          {
+            "name": "accent_color",
+            "type": "color",
+            "label": "Accent Color",
+            "defaultValue": "#1b3a6b"
+          }
+        ]
+      },
+      "defaultConfig": {
+        "eyebrow": "New Learning Path",
+        "title": "Databricks Analytics Fundamentals Accreditation",
+        "cta_label": "Explore Flows",
+        "url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation",
+        "logo_url": "",
+        "accent_color": "#1b3a6b"
+      }
+    },
+    {
       "category": "Demo",
       "configuration": {
         "properties": [
