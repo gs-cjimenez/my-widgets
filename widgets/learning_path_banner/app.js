@@ -1,9 +1,9 @@
 export async function init(sdk) {
   await sdk.whenReady()
 
+  const root = sdk.getContainer()
   const banner = sdk.$('#banner')
   const logoWrap = sdk.$('#logoWrap')
-  const logoFallback = sdk.$('#logoFallback')
   const eyebrowText = sdk.$('#eyebrowText')
   const titleText = sdk.$('#titleText')
   const ctaText = sdk.$('#ctaText')
@@ -14,29 +14,23 @@ export async function init(sdk) {
     if (titleText) titleText.textContent = props.title || 'Databricks Analytics Fundamentals Accreditation'
     if (ctaText) ctaText.textContent = props.cta_label || 'Explore Flows'
 
-    if (logoWrap) {
-      logoWrap.style.background = props.accent_color || '#1b3a6b'
-    }
-
-    const ctaBtn = sdk.$('.cta-btn')
-    if (ctaBtn) {
-      ctaBtn.style.background = props.cta_color || '#1b3a6b'
-    }
-
-    if (banner) {
-      banner.style.background = props.banner_bg_color || '#f0f4fa'
-    }
+    root.style.setProperty('--lp-banner-bg', props.banner_bg_color || '#f0f4fa')
+    root.style.setProperty('--lp-accent', props.accent_color || '#1b3a6b')
+    root.style.setProperty('--lp-eyebrow', props.eyebrow_color || '#e85d26')
+    root.style.setProperty('--lp-title', props.title_color || '#111827')
+    root.style.setProperty('--lp-cta-bg', props.cta_color || '#1b3a6b')
+    root.style.setProperty('--lp-cta-text', props.cta_text_color || '#ffffff')
+    root.style.setProperty('--lp-logo-text', props.logo_text_color || '#ffffff')
 
     if (props.logo_url && logoWrap) {
-      const existing = logoWrap.querySelector('img')
-      if (!existing) {
-        const img = document.createElement('img')
+      let img = logoWrap.querySelector('img')
+      if (!img) {
+        img = document.createElement('img')
         img.alt = ''
         logoWrap.innerHTML = ''
         logoWrap.appendChild(img)
       }
-      logoWrap.querySelector('img').src = props.logo_url
-      if (logoFallback) logoFallback.style.display = 'none'
+      img.src = props.logo_url
     }
   }
 

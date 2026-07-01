@@ -58,16 +58,40 @@
             "defaultValue": "#1b3a6b"
           },
           {
-            "name": "cta_color",
-            "type": "color",
-            "label": "CTA Button Color",
-            "defaultValue": "#1b3a6b"
-          },
-          {
             "name": "banner_bg_color",
             "type": "color",
             "label": "Banner Background Color",
             "defaultValue": "#f0f4fa"
+          },
+          {
+            "name": "eyebrow_color",
+            "type": "color",
+            "label": "Eyebrow Text Color",
+            "defaultValue": "#e85d26"
+          },
+          {
+            "name": "title_color",
+            "type": "color",
+            "label": "Title Text Color",
+            "defaultValue": "#111827"
+          },
+          {
+            "name": "cta_color",
+            "type": "color",
+            "label": "CTA Button Background",
+            "defaultValue": "#1b3a6b"
+          },
+          {
+            "name": "cta_text_color",
+            "type": "color",
+            "label": "CTA Button Text Color",
+            "defaultValue": "#ffffff"
+          },
+          {
+            "name": "logo_text_color",
+            "type": "color",
+            "label": "Logo Fallback Text Color",
+            "defaultValue": "#ffffff"
           }
         ]
       },
@@ -78,8 +102,12 @@
         "url": "https://www.databricks.com/resources/learn/training/analytics-fundamentals-accreditation",
         "logo_url": "",
         "accent_color": "#1b3a6b",
+        "banner_bg_color": "#f0f4fa",
+        "eyebrow_color": "#e85d26",
+        "title_color": "#111827",
         "cta_color": "#1b3a6b",
-        "banner_bg_color": "#f0f4fa"
+        "cta_text_color": "#ffffff",
+        "logo_text_color": "#ffffff"
       }
     },
     {
