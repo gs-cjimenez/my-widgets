@@ -408,6 +408,86 @@
         "entry": "index.html"
       },
       "imageSrc": "widgets/react_widget/thumbnail.png"
+    },
+    {
+      "type": "gs_featured_content_carousel",
+      "title": "Featured Content Carousel",
+      "version": "1.0.0",
+      "description": "A full-width featured content carousel with image, title, optional description, and CTA button. Supports up to 5 configurable slides with auto-play.",
+      "category": "Demo",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/featured_content_carousel",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          { "name": "slide_count", "type": "number", "label": "Number of Slides (1–5)", "defaultValue": 3 },
+          { "name": "autoplay_interval", "type": "number", "label": "Auto-play Interval (seconds)", "defaultValue": 5 },
+          { "name": "s1_image_url", "type": "text", "label": "Slide 1 — Image URL", "defaultValue": "" },
+          { "name": "s1_title", "type": "text", "label": "Slide 1 — Title", "defaultValue": "Social Warrior Challenge!" },
+          { "name": "s1_description", "type": "text", "label": "Slide 1 — Description (optional)", "defaultValue": "" },
+          { "name": "s1_button_text", "type": "text", "label": "Slide 1 — Button Text", "defaultValue": "View More" },
+          { "name": "s1_button_url", "type": "text", "label": "Slide 1 — Button URL", "defaultValue": "#" },
+          { "name": "s2_image_url", "type": "text", "label": "Slide 2 — Image URL", "defaultValue": "" },
+          { "name": "s2_title", "type": "text", "label": "Slide 2 — Title", "defaultValue": "Introducing Our 2026 Customer Excellence Awards Winners!" },
+          { "name": "s2_description", "type": "text", "label": "Slide 2 — Description (optional)", "defaultValue": "The wait is over! We've reviewed an exceptional pool of talent, and we are thrilled to unveil the winners of the 2026 Customer Excellence Awards." },
+          { "name": "s2_button_text", "type": "text", "label": "Slide 2 — Button Text", "defaultValue": "View More" },
+          { "name": "s2_button_url", "type": "text", "label": "Slide 2 — Button URL", "defaultValue": "#" },
+          { "name": "s3_image_url", "type": "text", "label": "Slide 3 — Image URL", "defaultValue": "" },
+          { "name": "s3_title", "type": "text", "label": "Slide 3 — Title", "defaultValue": "Join Our Community Forum" },
+          { "name": "s3_description", "type": "text", "label": "Slide 3 — Description (optional)", "defaultValue": "Connect with peers, share best practices, and get answers from experts in our community forum." },
+          { "name": "s3_button_text", "type": "text", "label": "Slide 3 — Button Text", "defaultValue": "View More" },
+          { "name": "s3_button_url", "type": "text", "label": "Slide 3 — Button URL", "defaultValue": "#" },
+          { "name": "s4_image_url", "type": "text", "label": "Slide 4 — Image URL", "defaultValue": "" },
+          { "name": "s4_title", "type": "text", "label": "Slide 4 — Title", "defaultValue": "" },
+          { "name": "s4_description", "type": "text", "label": "Slide 4 — Description (optional)", "defaultValue": "" },
+          { "name": "s4_button_text", "type": "text", "label": "Slide 4 — Button Text", "defaultValue": "View More" },
+          { "name": "s4_button_url", "type": "text", "label": "Slide 4 — Button URL", "defaultValue": "#" },
+          { "name": "s5_image_url", "type": "text", "label": "Slide 5 — Image URL", "defaultValue": "" },
+          { "name": "s5_title", "type": "text", "label": "Slide 5 — Title", "defaultValue": "" },
+          { "name": "s5_description", "type": "text", "label": "Slide 5 — Description (optional)", "defaultValue": "" },
+          { "name": "s5_button_text", "type": "text", "label": "Slide 5 — Button Text", "defaultValue": "View More" },
+          { "name": "s5_button_url", "type": "text", "label": "Slide 5 — Button URL", "defaultValue": "#" }
+        ]
+      },
+      "defaultConfig": {
+        "slide_count": 3,
+        "autoplay_interval": 5,
+        "s1_image_url": "",
+        "s1_title": "Social Warrior Challenge!",
+        "s1_description": "",
+        "s1_button_text": "View More",
+        "s1_button_url": "#",
+        "s2_image_url": "",
+        "s2_title": "Introducing Our 2026 Customer Excellence Awards Winners!",
+        "s2_description": "The wait is over! We've reviewed an exceptional pool of talent, and we are thrilled to unveil the winners of the 2026 Customer Excellence Awards.",
+        "s2_button_text": "View More",
+        "s2_button_url": "#",
+        "s3_image_url": "",
+        "s3_title": "Join Our Community Forum",
+        "s3_description": "Connect with peers, share best practices, and get answers from experts in our community forum.",
+        "s3_button_text": "View More",
+        "s3_button_url": "#",
+        "s4_image_url": "",
+        "s4_title": "",
+        "s4_description": "",
+        "s4_button_text": "View More",
+        "s4_button_url": "#",
+        "s5_image_url": "",
+        "s5_title": "",
+        "s5_description": "",
+        "s5_button_text": "View More",
+        "s5_button_url": "#"
+      }
     }
   ]
 }
