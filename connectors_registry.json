@@ -3,7 +3,7 @@
     {
       "name": "Community Cases — List",
       "permalink": "community-cases-list",
-      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ pathParams.categoryId }}&include[]=user&include[]=messages&limit=50",
+      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ pathParams.categoryId }}&filter[user.id][]={{ user.id }}&include[]=user&include[]=messages&limit=50",
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
@@ -34,7 +34,7 @@
           "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
         }
       },
-      "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"message\": {{ b.message | tojson }},\n  \"categoryId\": {{ b.categoryId }},\n  \"type\": {{ b.type | default('question') | tojson }}\n}"
+      "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"message\": {{ b.message | tojson }},\n  \"categoryId\": {{ b.categoryId }},\n  \"type\": {{ b.type | default('question') | tojson }},\n  \"userId\": {{ user.id }}\n}"
     },
     {
       "name": "Community Cases — Get Thread",
@@ -70,7 +70,7 @@
           "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
         }
       },
-      "request_body": "{% set b = body_text | from_json %}\n{\n  \"message\": {{ b.message | tojson }},\n  \"topicId\": {{ b.topicId }}\n}"
+      "request_body": "{% set b = body_text | from_json %}\n{\n  \"message\": {{ b.message | tojson }},\n  \"topicId\": {{ b.topicId }},\n  \"userId\": {{ user.id }}\n}"
     },
     {
       "name": "Spotlight Users",
