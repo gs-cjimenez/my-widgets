@@ -57,7 +57,8 @@
           "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
           "scope": "read write"
         }
-      }
+      },
+      "response_body": "{\"success\": true}"
     },
     {
       "name": "Spotlight Users",
