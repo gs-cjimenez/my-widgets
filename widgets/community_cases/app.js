@@ -16,7 +16,7 @@ export async function init(sdk) {
   sdk.on('destroy', () => {})
 
   // ── Connector calls ───────────────────────────────────────────────────────
-  console.log('[community_cases] SDK keys:', Object.getOwnPropertyNames(Object.getPrototypeOf(sdk)).concat(Object.keys(sdk)))
+  console.error('[community_cases] SDK keys:', Object.getOwnPropertyNames(Object.getPrototypeOf(sdk)).concat(Object.keys(sdk)))
 
   function getXsrfToken() {
     const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('XSRF-TOKEN='))
