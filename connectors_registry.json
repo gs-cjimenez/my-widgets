@@ -40,7 +40,7 @@
     {
       "name": "Community Cases — Add Reply",
       "permalink": "community-cases-add-reply",
-      "url": "https://api2-us-west-2.insided.com/v2/questions/{topicId}/reply?authorId=5",
+      "url": "https://api2-us-west-2.insided.com/v2/questions/19/reply?authorId=5",
       "method": "POST",
       "headers": [
         { "key": "Content-Type", "value": "application/json", "overridable": false },
