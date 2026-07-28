@@ -1,357 +1,308 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .widget {
+  .w {
     font-family: var(--config--main-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    font-size: 14px;
     color: var(--config--main-color-text, #111827);
-    background: var(--config--main-color-background, #ffffff);
+    background: var(--config--main-color-background, #fff);
     --accent: #2563eb;
-    min-height: 200px;
   }
 
-  /* ── Header ── */
-  .widget-header {
+  /* ── Top bar ── */
+  .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--config--main-color-border, #e5e7eb);
+    padding: 14px 20px;
+    background: var(--config--main-color-background, #fff);
   }
-
-  .widget-header h2 {
-    font-size: 17px;
-    font-weight: 600;
-  }
+  .topbar h2 { font-size: 18px; font-weight: 700; }
+  .topbar-btns { display: flex; gap: 8px; }
 
   /* ── Buttons ── */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 7px 14px;
+    border-radius: 5px;
     font-size: 13px;
     font-weight: 500;
-    cursor: pointer;
-    border: none;
     font-family: inherit;
-    transition: opacity 0.15s;
-    line-height: 1;
+    cursor: pointer;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    transition: background 0.15s;
   }
-  .btn:hover { opacity: 0.85; }
+  .btn:hover { background: #f9fafb; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: #1d4ed8; }
 
-  .btn-primary { background: var(--accent); color: #fff; }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--config--main-color-text, #374151);
-    border: 1px solid var(--config--main-color-border, #e5e7eb);
+  /* ── Two-panel body ── */
+  .body {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    border-top: 1px solid #e5e7eb;
   }
 
-  .btn-back {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--accent);
-    font-family: inherit;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0;
-  }
-
-  /* ── Views ── */
-  #view-list    { display: block; }
-  #view-create  { display: none; }
-  #view-detail  { display: none; }
-
-  .view-sub-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 24px;
-    border-bottom: 1px solid var(--config--main-color-border, #e5e7eb);
-  }
-
-  .view-sub-header-title {
-    font-size: 15px;
+  /* ── Panel ── */
+  .panel { border-right: 1px solid #e5e7eb; overflow: hidden; }
+  .panel:last-child { border-right: none; }
+  .panel-head {
+    padding: 10px 16px;
     font-weight: 600;
-    color: var(--config--main-color-text, #111827);
+    font-size: 13px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fafafa;
   }
 
-  /* ── Status badges ── */
+  /* ── Cases table ── */
+  .cases-meta {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #2563eb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .cases-meta.hidden { display: none; }
+
+  .cases-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .cases-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .cases-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+  .cases-table tr:last-child td { border-bottom: none; }
+  .cases-table tbody tr { cursor: pointer; }
+  .cases-table tbody tr:hover td { background: #f9fafb; }
+  .cases-table tbody tr.selected td { background: #eff6ff; }
+
+  .subj-cell { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+
+  /* ── Badges ── */
   .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 12px;
     white-space: nowrap;
-    text-transform: capitalize;
   }
-  .badge-open         { background: #dcfce7; color: #166534; }
-  .badge-closed       { background: #f3f4f6; color: #374151; }
-  .badge-in-progress  { background: #dbeafe; color: #1e40af; }
+  .badge-new      { background: #dcfce7; color: #166534; }
+  .badge-open     { background: #dcfce7; color: #166534; }
+  .badge-closed   { background: #f3f4f6; color: #374151; }
+  .badge-progress { background: #dbeafe; color: #1e40af; }
+  .badge-high     { background: #fee2e2; color: #991b1b; }
+  .badge-critical { background: #7f1d1d; color: #fff; }
+  .badge-medium   { background: #fef3c7; color: #92400e; }
+  .badge-low      { background: #f3f4f6; color: #374151; }
 
-  /* ── Skeleton / loading ── */
-  .skeleton-wrap { padding: 16px 24px; display: flex; flex-direction: column; gap: 10px; }
-  .skeleton {
-    border-radius: 8px;
-    height: 62px;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e9eaec 50%, #f3f4f6 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
+  /* ── Skeleton ── */
+  .skel-wrap { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .skel { border-radius: 4px; height: 32px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size: 200% 100%; animation: sh 1.4s infinite; }
+  .skel.tall { height: 48px; }
+  @keyframes sh { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── Error / empty ── */
+  .notice { padding: 16px; font-size: 13px; color: #6b7280; }
+  .notice.error { color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; margin: 12px; }
+
+  /* ── Detail panel ── */
+  .detail-body { padding: 16px; }
+  .detail-empty { padding: 20px 16px; font-size: 13px; color: #9ca3af; }
+
+  .detail-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 4px 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 13px;
+    align-items: start;
   }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .detail-row:last-of-type { border-bottom: none; }
+  .detail-label { color: #6b7280; font-weight: 500; }
+  .detail-value { color: #111827; }
 
-  /* ── Error banner ── */
-  .error-banner {
-    margin: 12px 24px 0;
-    padding: 10px 14px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #b91c1c;
+  .detail-divider { margin: 14px 0 10px; font-weight: 600; font-size: 13px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
+
+  /* ── Comments ── */
+  .comments-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; max-height: 280px; overflow-y: auto; }
+
+  .comment {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .comment-meta { display: flex; gap: 8px; align-items: baseline; margin-bottom: 4px; }
+  .comment-author { font-size: 12px; font-weight: 600; color: #374151; }
+  .comment-time { font-size: 11px; color: #9ca3af; }
+  .comment-body { font-size: 13px; line-height: 1.5; }
+  .comment-body p { margin: 0; }
+
+  /* ── Reply box ── */
+  .reply-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .reply-wrap textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 64px;
+    outline: none;
+    transition: border-color 0.15s;
+    background: #fff;
+    color: #111827;
   }
-  .error-banner.hidden { display: none; }
+  .reply-wrap textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
 
-  /* ── Case list ── */
-  .case-list { padding: 12px 24px; display: flex; flex-direction: column; gap: 8px; }
-  .case-list.hidden { display: none; }
-
-  .case-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 1px solid var(--config--main-color-border, #e5e7eb);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .case-item:hover {
-    border-color: var(--accent);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-  }
-  .case-info { flex: 1; min-width: 0; }
-  .case-subject {
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--config--main-color-text, #111827);
-  }
-  .case-meta { font-size: 12px; color: #6b7280; margin-top: 3px; }
-  .case-chevron { color: #9ca3af; font-size: 16px; flex-shrink: 0; }
-
-  /* ── Empty state ── */
-  .empty-state {
-    padding: 52px 24px;
-    text-align: center;
-    color: #6b7280;
-  }
-  .empty-state svg { margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
-  .empty-state p + p { margin-top: 4px; font-size: 13px; }
-  .empty-state.hidden { display: none; }
-
-  /* ── Create form ── */
-  .form-body { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
-
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label { font-size: 13px; font-weight: 500; color: #374151; }
-
+  /* ── Create form (replaces detail panel) ── */
+  .create-form { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: #374151; }
   .form-group input,
   .form-group textarea,
   .form-group select {
-    padding: 10px 12px;
-    border: 1px solid var(--config--main-color-border, #d1d5db);
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 13px;
     font-family: inherit;
-    color: var(--config--main-color-text, #111827);
-    background: var(--config--main-color-background, #fff);
+    color: #111827;
+    background: #fff;
     outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: border-color 0.15s;
   }
   .form-group input:focus,
   .form-group textarea:focus,
-  .form-group select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
-  }
-  .form-group textarea { resize: vertical; min-height: 110px; }
+  .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .form-group textarea { min-height: 90px; resize: vertical; }
+  .form-actions { display: flex; gap: 8px; }
 
-  .form-actions { display: flex; gap: 10px; align-items: center; }
-
-  /* ── Detail view ── */
-  .detail-title { font-size: 17px; font-weight: 600; padding: 18px 24px 0; }
-
-  .thread {
-    padding: 16px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-height: 480px;
-    overflow-y: auto;
-  }
-  .thread.hidden { display: none; }
-
-  .message { display: flex; gap: 10px; }
-  .message.is-mod { flex-direction: row; }
-  .message.is-user { flex-direction: row-reverse; }
-
-  .avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
-    overflow: hidden;
-    text-transform: uppercase;
-  }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .message.is-user .avatar { background: #7c3aed; }
-
-  .bubble {
-    max-width: 75%;
-    background: #f9fafb;
-    border: 1px solid var(--config--main-color-border, #e5e7eb);
-    border-radius: 0 10px 10px 10px;
-    padding: 10px 14px;
-  }
-  .message.is-user .bubble {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-    border-radius: 10px 0 10px 10px;
-  }
-  .bubble-meta { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
-  .bubble-author { font-size: 12px; font-weight: 600; color: #374151; }
-  .bubble-time { font-size: 11px; color: #9ca3af; }
-  .bubble-body { font-size: 14px; line-height: 1.55; }
-  .bubble-body p { margin: 0; }
-  .bubble-body p + p { margin-top: 6px; }
-
-  /* ── Reply box ── */
-  .reply-box {
-    padding: 14px 24px;
-    border-top: 1px solid var(--config--main-color-border, #e5e7eb);
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-  }
-  .reply-box textarea {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid var(--config--main-color-border, #d1d5db);
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    resize: none;
-    min-height: 58px;
-    max-height: 140px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    background: var(--config--main-color-background, #fff);
-    color: var(--config--main-color-text, #111827);
-  }
-  .reply-box textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
-  }
-
-  .skeleton-thread { padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; }
-  .skeleton-msg { height: 72px; border-radius: 10px; }
+  .hidden { display: none !important; }
 </style>
 
-<div class="widget">
+<div class="w">
 
-  <!-- ── LIST VIEW ── -->
-  <div id="view-list">
-    <div class="widget-header">
-      <h2 id="widget-title-el">My Cases</h2>
+  <!-- Top bar -->
+  <div class="topbar">
+    <h2 id="widget-title">My Cases</h2>
+    <div class="topbar-btns">
+      <button class="btn" id="btn-refresh">Refresh</button>
       <button class="btn btn-primary" id="btn-new-case">+ New Case</button>
     </div>
-
-    <div id="list-loading" class="skeleton-wrap">
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-    </div>
-    <div id="list-error" class="error-banner hidden"></div>
-    <div id="cases-list" class="case-list hidden"></div>
-    <div id="list-empty" class="empty-state hidden">
-      <svg width="44" height="44" fill="none" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" stroke="#9ca3af" stroke-width="1.8">
-        <rect x="6" y="2" width="32" height="40" rx="3"/>
-        <path d="M13 13h18M13 19h18M13 25h10" stroke-linecap="round"/>
-      </svg>
-      <p>No cases yet.</p>
-      <p>Click <strong>+ New Case</strong> to submit your first support case.</p>
-    </div>
   </div>
 
-  <!-- ── CREATE VIEW ── -->
-  <div id="view-create">
-    <div class="view-sub-header">
-      <button class="btn-back" id="btn-back-create">← My Cases</button>
-      <span class="view-sub-header-title">New Case</span>
-    </div>
-    <div class="form-body">
-      <div id="create-error" class="error-banner hidden"></div>
-      <div class="form-group">
-        <label for="case-subject">Subject <span style="color:#ef4444">*</span></label>
-        <input type="text" id="case-subject" placeholder="Brief description of your issue" maxlength="200" />
-      </div>
-      <div class="form-group">
-        <label for="case-description">Description <span style="color:#ef4444">*</span></label>
-        <textarea id="case-description" placeholder="Describe your issue in detail — steps to reproduce, what you expected, and what actually happened."></textarea>
-      </div>
-      <div class="form-group">
-        <label for="case-priority">Priority</label>
-        <select id="case-priority">
-          <option value="Low">Low — general question or minor inconvenience</option>
-          <option value="Medium" selected>Medium — issue affecting my workflow</option>
-          <option value="High">High — significant impact on operations</option>
-          <option value="Critical">Critical — system down or data at risk</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" id="btn-submit-case">Submit Case</button>
-        <button class="btn btn-ghost" id="btn-cancel-create">Cancel</button>
-      </div>
-    </div>
-  </div>
+  <!-- Main two-panel area -->
+  <div class="body">
 
-  <!-- ── DETAIL VIEW ── -->
-  <div id="view-detail">
-    <div class="view-sub-header">
-      <button class="btn-back" id="btn-back-detail">← My Cases</button>
-      <span id="detail-status-badge" class="badge"></span>
-    </div>
-    <h2 class="detail-title" id="detail-title-el"></h2>
+    <!-- LEFT: Cases list -->
+    <div class="panel">
+      <div class="panel-head">Cases</div>
+      <div id="cases-meta" class="cases-meta hidden"></div>
 
-    <div id="thread-loading" class="skeleton-thread">
-      <div class="skeleton skeleton-msg"></div>
-      <div class="skeleton skeleton-msg" style="height:56px;"></div>
-    </div>
-    <div id="thread-error" class="error-banner hidden" style="margin-bottom:12px;"></div>
-    <div id="thread" class="thread hidden"></div>
+      <!-- Loading skeleton -->
+      <div id="cases-loading" class="skel-wrap">
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      </div>
 
-    <div class="reply-box">
-      <textarea id="reply-text" placeholder="Write a reply… (Ctrl+Enter to send)"></textarea>
-      <button class="btn btn-primary" id="btn-send-reply">Send</button>
-    </div>
-  </div>
+      <!-- Error -->
+      <div id="cases-error" class="notice error hidden"></div>
 
-</div>
+      <!-- Table -->
+      <div id="cases-table-wrap" class="hidden" style="overflow-x:auto;">
+        <table class="cases-table">
+          <thead>
+            <tr>
+              <th>Case #</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="cases-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Empty state -->
+      <div id="cases-empty" class="notice hidden">
+        No cases found. Click <strong>+ New Case</strong> to submit your first case.
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail / Create -->
+    <div class="panel">
+      <div class="panel-head" id="right-panel-head">Details</div>
+
+      <!-- Detail: placeholder -->
+      <div id="detail-placeholder" class="detail-empty">Select a case to view details.</div>
+
+      <!-- Detail: loading -->
+      <div id="detail-loading" class="skel-wrap hidden">
+        <div class="skel tall"></div><div class="skel tall"></div><div class="skel"></div>
+      </div>
+
+      <!-- Detail: content -->
+      <div id="detail-content" class="detail-body hidden">
+        <div id="detail-rows"></div>
+
+        <div class="detail-divider">Comments</div>
+        <div id="comments-list" class="comments-list"></div>
+        <div id="comments-empty" class="notice hidden" style="padding:0 0 12px;">No public comments on this case.</div>
+
+        <div class="reply-wrap">
+          <textarea id="reply-text" placeholder="Write a public comment…"></textarea>
+          <div>
+            <button class="btn btn-primary" id="btn-post-comment">Post Comment</button>
+          </div>
+        </div>
+        <div id="reply-error" class="notice error hidden" style="margin:8px 0 0;"></div>
+      </div>
+
+      <!-- Create: form -->
+      <div id="create-form" class="create-form hidden">
+        <div id="create-error" class="notice error hidden"></div>
+        <div class="form-group">
+          <label>Subject *</label>
+          <input type="text" id="case-subject" placeholder="Brief description of your issue" maxlength="200" />
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="case-description" placeholder="Describe your issue in detail…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="case-priority">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="btn-submit-case">Submit Case</button>
+          <button class="btn" id="btn-cancel-create">Cancel</button>
+        </div>
+      </div>
+
+    </div><!-- /right panel -->
+  </div><!-- /body -->
+
+</div><!-- /w -->
 
 <script type="module" src="app.js"></script>

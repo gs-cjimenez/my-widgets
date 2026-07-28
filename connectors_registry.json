@@ -3,7 +3,7 @@
     {
       "name": "Community Cases — List",
       "permalink": "community-cases-list",
-      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ (body_text | from_json).categoryId }}&include[]=user&include[]=firstMessage&limit=50",
+      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ pathParams.categoryId }}&include[]=user&include[]=messages&limit=50",
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
@@ -39,7 +39,7 @@
     {
       "name": "Community Cases — Get Thread",
       "permalink": "community-cases-get-thread",
-      "url": "https://api2-us-west-2.insided.com/topic/{{ (body_text | from_json).topicId }}?include[]=messages&include[]=user",
+      "url": "https://api2-us-west-2.insided.com/topic/{{ pathParams.topicId }}?include[]=messages&include[]=user",
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
