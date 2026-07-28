@@ -16,13 +16,24 @@ export async function init(sdk) {
   sdk.on('destroy', () => {})
 
   // ── Connector calls ───────────────────────────────────────────────────────
-  async function execGet(permalink) {
-    return sdk.callConnector(permalink, {})
+  // Calls the connector proxy directly over HTTP — works regardless of SDK version.
+  async function execConnector(permalink, body = null) {
+    const res = await fetch(`/widget-service/connectors/${permalink}/execute`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: body ? JSON.stringify(body) : null
+    })
+    let payload
+    try { payload = await res.json() } catch { payload = null }
+    if (!res.ok) {
+      throw new Error(payload?.message || payload?.error || `Connector error ${res.status}`)
+    }
+    return payload
   }
 
-  async function execPost(permalink, body = {}) {
-    return sdk.callConnector(permalink, { body: JSON.stringify(body) })
-  }
+  const execGet  = (permalink)       => execConnector(permalink)
+  const execPost = (permalink, body) => execConnector(permalink, body)
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
