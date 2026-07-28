@@ -140,7 +140,7 @@ export async function init(sdk) {
     const replyN    = topic.messagesCount ?? topic.commentCount ?? 0
 
     detailRows.innerHTML = `
-      <div class="detail-row"><span class="detail-label">Case #</span>    <span class="detail-value">${esc(topic.id)}</span></div>
+      <div class="detail-row"><span class="detail-label">Case #</span>    <span class="detail-value">${esc(topic.publicId ?? topic.id)}</span></div>
       <div class="detail-row"><span class="detail-label">Subject</span>   <span class="detail-value">${esc(topic.title)}</span></div>
       <div class="detail-row"><span class="detail-label">Status</span>    <span class="detail-value">${statusBadge(topic.status || 'open')}</span></div>
       ${priority ? `<div class="detail-row"><span class="detail-label">Priority</span>  <span class="detail-value">${priorityBadge(priority)}</span></div>` : ''}
@@ -199,7 +199,7 @@ export async function init(sdk) {
 
       casesTbody.innerHTML = topics.map(t => `
         <tr data-id="${esc(t.id)}" ${selectedId == t.id ? 'class="selected"' : ''}>
-          <td>${esc(t.id)}</td>
+          <td>${esc(t.publicId ?? t.id)}</td>
           <td class="subj-cell" title="${esc(t.title)}">${esc(t.title)}</td>
           <td>${statusBadge(t.status || 'open')}</td>
           <td style="white-space:nowrap;color:#6b7280;">${fmtDate(t.createdAt)}</td>
