@@ -36,7 +36,7 @@
           "scope": "read write"
         }
       },
-      "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"content\": {{ b.content | tojson }},\n  \"categoryId\": {{ b.categoryId }}\n}"
+      "request_body": "{{ body_text }}"
     },
     {
       "name": "Community Cases — Add Reply",
@@ -56,7 +56,7 @@
           "scope": "read write"
         }
       },
-      "request_body": "{% set b = body_text | from_json %}\n{\n  \"content\": {{ b.content | tojson }}\n}"
+      "request_body": "{{ body_text }}"
     },
     {
       "name": "Spotlight Users",
