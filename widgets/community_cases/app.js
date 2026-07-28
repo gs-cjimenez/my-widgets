@@ -255,9 +255,8 @@ export async function init(sdk) {
 
       await execPost('community-cases-create', {
         title:      subject,
-        message:    `<p>${esc(description)}</p><p><em>Priority: ${esc(priority)}</em></p>`,
-        categoryId,
-        type:       'question'
+        content:    `<p>${esc(description)}</p><p><em>Priority: ${esc(priority)}</em></p>`,
+        categoryId
       })
 
       showRightPlaceholder()
@@ -282,8 +281,8 @@ export async function init(sdk) {
 
     try {
       await execPost('community-cases-add-reply', {
-        message: `<p>${esc(message)}</p>`,
-        topicId: Number(selectedId)
+        content: `<p>${esc(message)}</p>`,
+        topicId: selectedId
       })
       await loadCases()  // refreshes cache including new message, then re-selects
     } catch (err) {
