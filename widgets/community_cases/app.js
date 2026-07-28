@@ -21,16 +21,35 @@ export async function init(sdk) {
   console.error('[community_cases] WidgetServiceSDK available:', typeof window.WidgetServiceSDK)
   console.error('[community_cases] container attrs:', Array.from(sdk.getContainer?.()?.attributes ?? []).map(a => `${a.name}=${a.value}`))
 
+  // Probe the old SDK object so we know its real interface
+  try {
+    const probe = new window.WidgetServiceSDK()
+    console.error('[community_cases] legacySdk own keys:', JSON.stringify(Object.keys(probe)))
+    console.error('[community_cases] legacySdk proto keys:', JSON.stringify(Object.getOwnPropertyNames(Object.getPrototypeOf(probe))))
+  } catch(e) { console.error('[community_cases] probe error:', e.message) }
+  console.error('[community_cases] WidgetServiceSDK own keys:', JSON.stringify(Object.keys(window.WidgetServiceSDK)))
+  console.error('[community_cases] WidgetServiceSDK proto keys:', JSON.stringify(Object.getOwnPropertyNames(Object.getPrototypeOf(window.WidgetServiceSDK))))
+
   async function execConnector(permalink, body = null) {
-    // Try old global SDK first — it has .connectors.execute() on some platform versions
+    // Try old global SDK — probe showed it exists; find the right connector method
     if (typeof window.WidgetServiceSDK === 'function') {
       try {
-        const legacySdk = new window.WidgetServiceSDK()
-        await legacySdk.whenReady()
-        if (typeof legacySdk.connectors?.execute === 'function') {
-          console.error(`[community_cases] using legacy SDK for "${permalink}"`)
-          return legacySdk.connectors.execute(permalink, body ?? {})
+        // Option A: already-instantiated singleton
+        if (typeof window.WidgetServiceSDK.connectors?.execute === 'function') {
+          console.error(`[community_cases] using WidgetServiceSDK singleton for "${permalink}"`)
+          return await window.WidgetServiceSDK.connectors.execute(permalink, body ?? {})
         }
+        // Option B: constructor with different ready mechanism
+        const legacySdk = new window.WidgetServiceSDK()
+        const ready = legacySdk.init ?? legacySdk.ready ?? legacySdk.whenReady
+        if (typeof ready === 'function') {
+          await (ready.call ? ready.call(legacySdk) : ready())
+        }
+        if (typeof legacySdk.connectors?.execute === 'function') {
+          console.error(`[community_cases] using legacy SDK instance for "${permalink}"`)
+          return await legacySdk.connectors.execute(permalink, body ?? {})
+        }
+        console.error('[community_cases] legacy SDK has no connectors.execute — keys:', JSON.stringify(Object.keys(legacySdk)))
       } catch (e) {
         console.error('[community_cases] legacy SDK failed:', e.message)
       }
