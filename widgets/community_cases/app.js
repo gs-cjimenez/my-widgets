@@ -217,7 +217,7 @@ export async function init(sdk) {
 
     try {
       const res = await execGet('community-cases-list', {})
-      topics = res?.data ?? res?.items ?? []
+      topics = res?.result ?? []
 
       casesLoading.classList.add('hidden')
 
