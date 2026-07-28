@@ -1,0 +1,357 @@
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .widget {
+    font-family: var(--config--main-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    color: var(--config--main-color-text, #111827);
+    background: var(--config--main-color-background, #ffffff);
+    --accent: #2563eb;
+    min-height: 200px;
+  }
+
+  /* ── Header ── */
+  .widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--config--main-color-border, #e5e7eb);
+  }
+
+  .widget-header h2 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: opacity 0.15s;
+    line-height: 1;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-primary { background: var(--accent); color: #fff; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--config--main-color-text, #374151);
+    border: 1px solid var(--config--main-color-border, #e5e7eb);
+  }
+
+  .btn-back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--accent);
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+  }
+
+  /* ── Views ── */
+  #view-list    { display: block; }
+  #view-create  { display: none; }
+  #view-detail  { display: none; }
+
+  .view-sub-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--config--main-color-border, #e5e7eb);
+  }
+
+  .view-sub-header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--config--main-color-text, #111827);
+  }
+
+  /* ── Status badges ── */
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 12px;
+    white-space: nowrap;
+    text-transform: capitalize;
+  }
+  .badge-open         { background: #dcfce7; color: #166534; }
+  .badge-closed       { background: #f3f4f6; color: #374151; }
+  .badge-in-progress  { background: #dbeafe; color: #1e40af; }
+
+  /* ── Skeleton / loading ── */
+  .skeleton-wrap { padding: 16px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .skeleton {
+    border-radius: 8px;
+    height: 62px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e9eaec 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ── Error banner ── */
+  .error-banner {
+    margin: 12px 24px 0;
+    padding: 10px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .error-banner.hidden { display: none; }
+
+  /* ── Case list ── */
+  .case-list { padding: 12px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .case-list.hidden { display: none; }
+
+  .case-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--config--main-color-border, #e5e7eb);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .case-item:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  .case-info { flex: 1; min-width: 0; }
+  .case-subject {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--config--main-color-text, #111827);
+  }
+  .case-meta { font-size: 12px; color: #6b7280; margin-top: 3px; }
+  .case-chevron { color: #9ca3af; font-size: 16px; flex-shrink: 0; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    padding: 52px 24px;
+    text-align: center;
+    color: #6b7280;
+  }
+  .empty-state svg { margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+  .empty-state p + p { margin-top: 4px; font-size: 13px; }
+  .empty-state.hidden { display: none; }
+
+  /* ── Create form ── */
+  .form-body { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 13px; font-weight: 500; color: #374151; }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 10px 12px;
+    border: 1px solid var(--config--main-color-border, #d1d5db);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--config--main-color-text, #111827);
+    background: var(--config--main-color-background, #fff);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+
+  .form-actions { display: flex; gap: 10px; align-items: center; }
+
+  /* ── Detail view ── */
+  .detail-title { font-size: 17px; font-weight: 600; padding: 18px 24px 0; }
+
+  .thread {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 480px;
+    overflow-y: auto;
+  }
+  .thread.hidden { display: none; }
+
+  .message { display: flex; gap: 10px; }
+  .message.is-mod { flex-direction: row; }
+  .message.is-user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    text-transform: uppercase;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .message.is-user .avatar { background: #7c3aed; }
+
+  .bubble {
+    max-width: 75%;
+    background: #f9fafb;
+    border: 1px solid var(--config--main-color-border, #e5e7eb);
+    border-radius: 0 10px 10px 10px;
+    padding: 10px 14px;
+  }
+  .message.is-user .bubble {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    border-radius: 10px 0 10px 10px;
+  }
+  .bubble-meta { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+  .bubble-author { font-size: 12px; font-weight: 600; color: #374151; }
+  .bubble-time { font-size: 11px; color: #9ca3af; }
+  .bubble-body { font-size: 14px; line-height: 1.55; }
+  .bubble-body p { margin: 0; }
+  .bubble-body p + p { margin-top: 6px; }
+
+  /* ── Reply box ── */
+  .reply-box {
+    padding: 14px 24px;
+    border-top: 1px solid var(--config--main-color-border, #e5e7eb);
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .reply-box textarea {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--config--main-color-border, #d1d5db);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    min-height: 58px;
+    max-height: 140px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: var(--config--main-color-background, #fff);
+    color: var(--config--main-color-text, #111827);
+  }
+  .reply-box textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+
+  .skeleton-thread { padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .skeleton-msg { height: 72px; border-radius: 10px; }
+</style>
+
+<div class="widget">
+
+  <!-- ── LIST VIEW ── -->
+  <div id="view-list">
+    <div class="widget-header">
+      <h2 id="widget-title-el">My Cases</h2>
+      <button class="btn btn-primary" id="btn-new-case">+ New Case</button>
+    </div>
+
+    <div id="list-loading" class="skeleton-wrap">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+    <div id="list-error" class="error-banner hidden"></div>
+    <div id="cases-list" class="case-list hidden"></div>
+    <div id="list-empty" class="empty-state hidden">
+      <svg width="44" height="44" fill="none" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" stroke="#9ca3af" stroke-width="1.8">
+        <rect x="6" y="2" width="32" height="40" rx="3"/>
+        <path d="M13 13h18M13 19h18M13 25h10" stroke-linecap="round"/>
+      </svg>
+      <p>No cases yet.</p>
+      <p>Click <strong>+ New Case</strong> to submit your first support case.</p>
+    </div>
+  </div>
+
+  <!-- ── CREATE VIEW ── -->
+  <div id="view-create">
+    <div class="view-sub-header">
+      <button class="btn-back" id="btn-back-create">← My Cases</button>
+      <span class="view-sub-header-title">New Case</span>
+    </div>
+    <div class="form-body">
+      <div id="create-error" class="error-banner hidden"></div>
+      <div class="form-group">
+        <label for="case-subject">Subject <span style="color:#ef4444">*</span></label>
+        <input type="text" id="case-subject" placeholder="Brief description of your issue" maxlength="200" />
+      </div>
+      <div class="form-group">
+        <label for="case-description">Description <span style="color:#ef4444">*</span></label>
+        <textarea id="case-description" placeholder="Describe your issue in detail — steps to reproduce, what you expected, and what actually happened."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="case-priority">Priority</label>
+        <select id="case-priority">
+          <option value="Low">Low — general question or minor inconvenience</option>
+          <option value="Medium" selected>Medium — issue affecting my workflow</option>
+          <option value="High">High — significant impact on operations</option>
+          <option value="Critical">Critical — system down or data at risk</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="btn-submit-case">Submit Case</button>
+        <button class="btn btn-ghost" id="btn-cancel-create">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DETAIL VIEW ── -->
+  <div id="view-detail">
+    <div class="view-sub-header">
+      <button class="btn-back" id="btn-back-detail">← My Cases</button>
+      <span id="detail-status-badge" class="badge"></span>
+    </div>
+    <h2 class="detail-title" id="detail-title-el"></h2>
+
+    <div id="thread-loading" class="skeleton-thread">
+      <div class="skeleton skeleton-msg"></div>
+      <div class="skeleton skeleton-msg" style="height:56px;"></div>
+    </div>
+    <div id="thread-error" class="error-banner hidden" style="margin-bottom:12px;"></div>
+    <div id="thread" class="thread hidden"></div>
+
+    <div class="reply-box">
+      <textarea id="reply-text" placeholder="Write a reply… (Ctrl+Enter to send)"></textarea>
+      <button class="btn btn-primary" id="btn-send-reply">Send</button>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="app.js"></script>

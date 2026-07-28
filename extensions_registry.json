@@ -1,6 +1,53 @@
 {
   "widgets": [
     {
+      "type": "community_cases",
+      "title": "Community Cases",
+      "version": "1.0.0",
+      "description": "Let users create and track support cases as private community topics, with full moderator reply threading.",
+      "category": "Support",
+      "containers": ["Full width"],
+      "widgetsLibrary": true,
+      "settings": {
+        "configurable": true,
+        "editable": true,
+        "removable": true,
+        "shared": false,
+        "movable": true
+      },
+      "source": {
+        "path": "widgets/community_cases",
+        "entry": "index.html"
+      },
+      "configuration": {
+        "properties": [
+          {
+            "name": "widget_title",
+            "type": "text",
+            "label": "Widget Title",
+            "defaultValue": "My Cases"
+          },
+          {
+            "name": "category_id",
+            "type": "text",
+            "label": "Private Category ID",
+            "defaultValue": ""
+          },
+          {
+            "name": "accent_color",
+            "type": "color",
+            "label": "Accent Color",
+            "defaultValue": "#2563eb"
+          }
+        ]
+      },
+      "defaultConfig": {
+        "widget_title": "My Cases",
+        "category_id": "",
+        "accent_color": "#2563eb"
+      }
+    },
+    {
       "type": "learning_path_banner",
       "title": "Learning Path Banner",
       "version": "1.0.0",

@@ -1,6 +1,78 @@
 {
   "connectors": [
     {
+      "name": "Community Cases — List",
+      "permalink": "community-cases-list",
+      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ (body_text | from_json).categoryId }}&include[]=user&include[]=firstMessage&limit=50",
+      "method": "GET",
+      "headers": [
+        { "key": "Accept", "value": "application/json", "overridable": false }
+      ],
+      "authentication": {
+        "type": "oauth_client_credentials",
+        "config": {
+          "client_id": "{{ get_secret('cc_id') }}",
+          "client_secret": "{{ get_secret('cc_secret') }}",
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+        }
+      }
+    },
+    {
+      "name": "Community Cases — Create",
+      "permalink": "community-cases-create",
+      "url": "https://api2-us-west-2.insided.com/topic",
+      "method": "POST",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json", "overridable": false },
+        { "key": "Accept",       "value": "application/json", "overridable": false }
+      ],
+      "authentication": {
+        "type": "oauth_client_credentials",
+        "config": {
+          "client_id": "{{ get_secret('cc_id') }}",
+          "client_secret": "{{ get_secret('cc_secret') }}",
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+        }
+      },
+      "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"message\": {{ b.message | tojson }},\n  \"categoryId\": {{ b.categoryId }},\n  \"type\": {{ b.type | default('question') | tojson }}\n}"
+    },
+    {
+      "name": "Community Cases — Get Thread",
+      "permalink": "community-cases-get-thread",
+      "url": "https://api2-us-west-2.insided.com/topic/{{ (body_text | from_json).topicId }}?include[]=messages&include[]=user",
+      "method": "GET",
+      "headers": [
+        { "key": "Accept", "value": "application/json", "overridable": false }
+      ],
+      "authentication": {
+        "type": "oauth_client_credentials",
+        "config": {
+          "client_id": "{{ get_secret('cc_id') }}",
+          "client_secret": "{{ get_secret('cc_secret') }}",
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+        }
+      }
+    },
+    {
+      "name": "Community Cases — Add Reply",
+      "permalink": "community-cases-add-reply",
+      "url": "https://api2-us-west-2.insided.com/comment",
+      "method": "POST",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json", "overridable": false },
+        { "key": "Accept",       "value": "application/json", "overridable": false }
+      ],
+      "authentication": {
+        "type": "oauth_client_credentials",
+        "config": {
+          "client_id": "{{ get_secret('cc_id') }}",
+          "client_secret": "{{ get_secret('cc_secret') }}",
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+        }
+      },
+      "request_body": "{% set b = body_text | from_json %}\n{\n  \"message\": {{ b.message | tojson }},\n  \"topicId\": {{ b.topicId }}\n}"
+    },
+    {
       "name": "Spotlight Users",
       "url": "https://api2-us-west-2.insided.com/user?filter[roles.rolename][]=Spotlight&include[]=roles&limit=50",
       "method": "GET",
