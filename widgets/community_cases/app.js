@@ -284,7 +284,7 @@ export async function init(sdk) {
     try {
       await execPost(
         'community-cases-add-reply',
-        { content: `<p>${esc(message)}</p>` },
+        { content: message },
         { topicId: selectedId }
       )
       await loadCases()  // refreshes cache including new message, then re-selects

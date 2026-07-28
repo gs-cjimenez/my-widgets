@@ -55,7 +55,7 @@
           "scope": "read write"
         }
       },
-      "request_body": "{% set b = body_text | from_json %}{\"content\": {{ b.content | tojson }}}"
+      "request_body": "{% set b = body_text | from_json %}{\"content\": {{ b.content | tojson }}, \"highlight\": false}"
     },
     {
       "name": "Spotlight Users",
