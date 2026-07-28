@@ -35,12 +35,12 @@
           "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
           "scope": "read write"
         }
-      },
+      }
     },
     {
       "name": "Community Cases — Add Reply",
       "permalink": "community-cases-add-reply",
-      "url": "https://api2-us-west-2.insided.com/v2/questions/{{ pathParams.topicId }}/reply?authorId={{ user.id }}",
+      "url": "https://api2-us-west-2.insided.com/v2/questions/{topicId}/reply?authorId={{ user.id }}",
       "method": "POST",
       "headers": [
         { "key": "Content-Type", "value": "application/json", "overridable": false },
@@ -55,9 +55,11 @@
           "scope": "read write"
         }
       },
+      "request_body": "{% set b = body_text | from_json %}{\"content\": {{ b.content | tojson }}}"
     },
     {
       "name": "Spotlight Users",
+      "permalink": "spotlight-users",
       "url": "https://api2-us-west-2.insided.com/user?filter[roles.rolename][]=Spotlight&include[]=roles&limit=50",
       "method": "GET",
       "headers": [
@@ -71,8 +73,7 @@
           "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
           "scope": "read write"
         }
-      },
-      "permalink": "spotlight-users"
+      }
     }
   ]
 }

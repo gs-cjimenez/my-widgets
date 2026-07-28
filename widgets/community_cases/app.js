@@ -18,18 +18,15 @@ export async function init(sdk) {
   // ── Connector calls ───────────────────────────────────────────────────────
   const wsSdk = new window.WidgetServiceSDK()
 
-  async function execConnector(permalink, method, payload = null, pathParams = null) {
+  async function execConnector(permalink, method, payload = null) {
     const opts = { permalink, method }
     if (payload) opts.payload = payload
-    if (pathParams) opts.pathParams = pathParams
-    console.error('[cc] execConnector opts:', JSON.stringify(opts))
     const result = await wsSdk.connectors.execute(opts)
-    console.error('[cc] execConnector result:', JSON.stringify(result))
     return result
   }
 
-  const execGet  = (permalink)                       => execConnector(permalink, 'GET')
-  const execPost = (permalink, payload, pathParams)  => execConnector(permalink, 'POST', payload, pathParams)
+  const execGet  = (permalink)          => execConnector(permalink, 'GET')
+  const execPost = (permalink, payload) => execConnector(permalink, 'POST', payload)
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
@@ -286,8 +283,7 @@ export async function init(sdk) {
     try {
       await execPost(
         'community-cases-add-reply',
-        { content: `<p>${esc(message)}</p>` },
-        { topicId: selectedId }
+        { topicId: selectedId, content: `<p>${esc(message)}</p>` }
       )
       await loadCases()  // refreshes cache including new message, then re-selects
     } catch (err) {
