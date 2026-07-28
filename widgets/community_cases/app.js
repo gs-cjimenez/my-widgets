@@ -16,14 +16,12 @@ export async function init(sdk) {
   sdk.on('destroy', () => {})
 
   // ── Connector calls ───────────────────────────────────────────────────────
-  // GET connector — uses pathParams for dynamic URL segments
-  async function execGet(permalink, pathParams = {}) {
-    return sdk.connectors.execute({ permalink, method: 'GET', pathParams })
+  async function execGet(permalink) {
+    return sdk.callConnector(permalink, {})
   }
 
-  // POST connector — body_text is the JSON body Jinja can parse
   async function execPost(permalink, body = {}) {
-    return sdk.connectors.execute({ permalink, method: 'POST', body: JSON.stringify(body) })
+    return sdk.callConnector(permalink, { body: JSON.stringify(body) })
   }
 
   // ── State ─────────────────────────────────────────────────────────────────
