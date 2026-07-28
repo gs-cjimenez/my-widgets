@@ -181,10 +181,7 @@ export async function init(sdk) {
     hideErr(casesError)
 
     try {
-      const categoryId = Number(props.category_id)
-      if (!categoryId) throw new Error('No Category ID configured — open widget settings and enter your private Category ID.')
-
-      const res    = await execGet('community-cases-list', { categoryId })
+      const res    = await execGet('community-cases-list', {})
       const topics = res?.data ?? res?.items ?? []
 
       casesLoading.classList.add('hidden')
