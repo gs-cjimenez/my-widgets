@@ -3,7 +3,7 @@
     {
       "name": "Community Cases — List",
       "permalink": "community-cases-list",
-      "url": "https://api2-us-west-2.insided.com/topic?filter[category.slug][]=chandler-37&filter[user.id][]={{ user.id }}&include[]=user&include[]=messages&limit=50",
+      "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]=37&filter[user.id][]={{ user.id }}&include[]=user&include[]=messages&limit=50",
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
