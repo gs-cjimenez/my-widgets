@@ -276,7 +276,7 @@ export async function init(sdk) {
     try {
       await execPost(
         'community-cases-add-reply',
-        { content: message }
+        { content: message, highlight: false }
       )
       await loadCases()  // refreshes cache including new message, then re-selects
     } catch (err) {
