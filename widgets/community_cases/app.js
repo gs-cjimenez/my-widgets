@@ -18,15 +18,8 @@ export async function init(sdk) {
   // ── Connector calls ───────────────────────────────────────────────────────
   const wsSdk = new window.WidgetServiceSDK()
 
-  async function execConnector(permalink, method, payload = null) {
-    const opts = { permalink, method }
-    if (payload) opts.payload = payload
-    const result = await wsSdk.connectors.execute(opts)
-    return result
-  }
-
-  const execGet  = (permalink)          => execConnector(permalink, 'GET')
-  const execPost = (permalink, payload) => execConnector(permalink, 'POST', payload)
+  const execGet  = (permalink)          => wsSdk.connectors.execute({ permalink, method: 'GET' })
+  const execPost = (permalink, payload) => wsSdk.connectors.execute({ permalink, method: 'POST', payload })
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
