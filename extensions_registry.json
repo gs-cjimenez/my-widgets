@@ -45,12 +45,7 @@
         "widget_title": "My Cases",
         "category_id": "",
         "accent_color": "#2563eb"
-      },
-      "connectors": [
-        "community-cases-list",
-        "community-cases-create",
-        "community-cases-add-reply"
-      ]
+      }
     },
     {
       "type": "learning_path_banner",

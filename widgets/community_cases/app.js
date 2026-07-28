@@ -22,12 +22,14 @@ export async function init(sdk) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: body ? JSON.stringify(body) : null
+      body: JSON.stringify(body ?? {})
     })
     let payload
     try { payload = await res.json() } catch { payload = null }
     if (!res.ok) {
-      throw new Error(payload?.message || payload?.error || `Connector error ${res.status}`)
+      const detail = payload ? JSON.stringify(payload) : `(no body)`
+      console.error(`[community_cases] connector "${permalink}" → HTTP ${res.status}`, detail)
+      throw new Error(`${res.status}: ${detail}`)
     }
     return payload
   }
