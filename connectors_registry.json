@@ -13,7 +13,8 @@
         "config": {
           "client_id": "{{ get_secret('cc_id') }}",
           "client_secret": "{{ get_secret('cc_secret') }}",
-          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
+          "scope": "read write"
         }
       }
     },
@@ -31,7 +32,8 @@
         "config": {
           "client_id": "{{ get_secret('cc_id') }}",
           "client_secret": "{{ get_secret('cc_secret') }}",
-          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
+          "scope": "read write"
         }
       },
       "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"content\": {{ b.message | tojson }},\n  \"categoryId\": {{ b.categoryId }}\n}"
@@ -50,7 +52,8 @@
         "config": {
           "client_id": "{{ get_secret('cc_id') }}",
           "client_secret": "{{ get_secret('cc_secret') }}",
-          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
+          "scope": "read write"
         }
       },
       "request_body": "{% set b = body_text | from_json %}\n{\n  \"content\": {{ b.message | tojson }}\n}"
@@ -67,7 +70,8 @@
         "config": {
           "client_id": "{{ get_secret('cc_id') }}",
           "client_secret": "{{ get_secret('cc_secret') }}",
-          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
+          "token_url": "https://api2-us-west-2.insided.com/oauth2/token",
+          "scope": "read write"
         }
       },
       "permalink": "spotlight-users"
