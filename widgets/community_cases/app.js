@@ -22,7 +22,10 @@ export async function init(sdk) {
     const opts = { permalink, method }
     if (payload) opts.payload = payload
     if (pathParams) opts.pathParams = pathParams
-    return await wsSdk.connectors.execute(opts)
+    console.error('[cc] execConnector opts:', JSON.stringify(opts))
+    const result = await wsSdk.connectors.execute(opts)
+    console.error('[cc] execConnector result:', JSON.stringify(result))
+    return result
   }
 
   const execGet  = (permalink)                       => execConnector(permalink, 'GET')
