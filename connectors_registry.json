@@ -3,7 +3,7 @@
     {
       "name": "Community Cases — List",
       "permalink": "community-cases-list",
-      "url": "https://api2-us-west-2.insided.com/v2/categories/37/topics?pageSize=50&sort=lastActivityAt",
+      "url": "https://api2-us-west-2.insided.com/v2/categories/37/topics",
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
