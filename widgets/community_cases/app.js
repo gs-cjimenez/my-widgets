@@ -16,11 +16,21 @@ export async function init(sdk) {
   sdk.on('destroy', () => {})
 
   // ── Connector calls ───────────────────────────────────────────────────────
-  // Calls the connector proxy directly over HTTP — works regardless of SDK version.
+  console.log('[community_cases] SDK keys:', Object.getOwnPropertyNames(Object.getPrototypeOf(sdk)).concat(Object.keys(sdk)))
+
+  function getXsrfToken() {
+    const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('XSRF-TOKEN='))
+    return cookie ? decodeURIComponent(cookie.split('=').slice(1).join('=')) : null
+  }
+
   async function execConnector(permalink, body = null) {
+    const xsrf = getXsrfToken()
+    const headers = { 'Content-Type': 'application/json' }
+    if (xsrf) headers['X-XSRF-TOKEN'] = xsrf
+
     const res = await fetch(`/widget-service/connectors/${permalink}/execute`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       credentials: 'include',
       body: JSON.stringify(body ?? {})
     })
