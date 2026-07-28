@@ -5,6 +5,9 @@
       "permalink": "community-cases-list",
       "url": "https://api2-us-west-2.insided.com/topic?filter[category.id][]={{ pathParams.categoryId }}&filter[user.id][]={{ user.id }}&include[]=user&include[]=messages&limit=50",
       "method": "GET",
+      "pathParams": [
+        { "key": "categoryId" }
+      ],
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
       ],
@@ -41,6 +44,9 @@
       "permalink": "community-cases-get-thread",
       "url": "https://api2-us-west-2.insided.com/topic/{{ pathParams.topicId }}?include[]=messages&include[]=user",
       "method": "GET",
+      "pathParams": [
+        { "key": "topicId" }
+      ],
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
       ],
