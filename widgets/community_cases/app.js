@@ -17,20 +17,29 @@ export async function init(sdk) {
 
   // ── Connector calls ───────────────────────────────────────────────────────
   console.error('[community_cases] SDK keys:', Object.getOwnPropertyNames(Object.getPrototypeOf(sdk)).concat(Object.keys(sdk)))
-
-  function getXsrfToken() {
-    const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('XSRF-TOKEN='))
-    return cookie ? decodeURIComponent(cookie.split('=').slice(1).join('=')) : null
-  }
+  console.error('[community_cases] cookies:', document.cookie)
+  console.error('[community_cases] WidgetServiceSDK available:', typeof window.WidgetServiceSDK)
+  console.error('[community_cases] container attrs:', Array.from(sdk.getContainer?.()?.attributes ?? []).map(a => `${a.name}=${a.value}`))
 
   async function execConnector(permalink, body = null) {
-    const xsrf = getXsrfToken()
-    const headers = { 'Content-Type': 'application/json' }
-    if (xsrf) headers['X-XSRF-TOKEN'] = xsrf
+    // Try old global SDK first — it has .connectors.execute() on some platform versions
+    if (typeof window.WidgetServiceSDK === 'function') {
+      try {
+        const legacySdk = new window.WidgetServiceSDK()
+        await legacySdk.whenReady()
+        if (typeof legacySdk.connectors?.execute === 'function') {
+          console.error(`[community_cases] using legacy SDK for "${permalink}"`)
+          return legacySdk.connectors.execute(permalink, body ?? {})
+        }
+      } catch (e) {
+        console.error('[community_cases] legacy SDK failed:', e.message)
+      }
+    }
 
+    // Fetch proxy fallback
     const res = await fetch(`/widget-service/connectors/${permalink}/execute`, {
       method: 'POST',
-      headers,
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(body ?? {})
     })
