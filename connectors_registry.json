@@ -37,26 +37,6 @@
       "request_body": "{% set b = body_text | from_json %}\n{\n  \"title\": {{ b.title | tojson }},\n  \"message\": {{ b.message | tojson }},\n  \"categoryId\": {{ b.categoryId }},\n  \"type\": {{ b.type | default('question') | tojson }},\n  \"userId\": {{ user.id }}\n}"
     },
     {
-      "name": "Community Cases — Get Thread",
-      "permalink": "community-cases-get-thread",
-      "url": "https://api2-us-west-2.insided.com/topic/{{ pathParams.topicId }}?include[]=messages&include[]=user",
-      "method": "GET",
-      "pathParams": [
-        { "key": "topicId" }
-      ],
-      "headers": [
-        { "key": "Accept", "value": "application/json", "overridable": false }
-      ],
-      "authentication": {
-        "type": "oauth_client_credentials",
-        "config": {
-          "client_id": "{{ get_secret('cc_id') }}",
-          "client_secret": "{{ get_secret('cc_secret') }}",
-          "token_url": "https://api2-us-west-2.insided.com/oauth2/token"
-        }
-      }
-    },
-    {
       "name": "Community Cases — Add Reply",
       "permalink": "community-cases-add-reply",
       "url": "https://api2-us-west-2.insided.com/comment",

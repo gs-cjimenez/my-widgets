@@ -27,6 +27,7 @@ export async function init(sdk) {
   }
 
   // ── State ─────────────────────────────────────────────────────────────────
+  let topics        = []   // cached from list connector
   let selectedId    = null
   let showingCreate = false
 
@@ -181,8 +182,8 @@ export async function init(sdk) {
     hideErr(casesError)
 
     try {
-      const res    = await execGet('community-cases-list', {})
-      const topics = res?.data ?? res?.items ?? []
+      const res = await execGet('community-cases-list', {})
+      topics = res?.data ?? res?.items ?? []
 
       casesLoading.classList.add('hidden')
 
@@ -208,7 +209,7 @@ export async function init(sdk) {
         row.addEventListener('click', () => selectTopic(row.dataset.id))
       )
 
-      // Re-select if previously selected
+      // Re-select using refreshed cache
       if (selectedId) selectTopic(selectedId)
 
     } catch (err) {
@@ -217,8 +218,8 @@ export async function init(sdk) {
     }
   }
 
-  // ── Select a topic → load thread ──────────────────────────────────────────
-  async function selectTopic(id) {
+  // ── Select a topic → render from cache ───────────────────────────────────
+  function selectTopic(id) {
     selectedId    = id
     showingCreate = false
 
@@ -226,18 +227,11 @@ export async function init(sdk) {
       r.classList.toggle('selected', r.dataset.id == id)
     )
 
-    showRightLoading()
-
-    try {
-      const res   = await execGet('community-cases-get-thread', { topicId: Number(id) })
-      const topic = res?.data ?? res
+    const topic = topics.find(t => String(t.id) === String(id))
+    if (topic) {
       renderDetail(topic)
-    } catch (err) {
-      rightPanelHead.textContent = 'Details'
-      detailLoading.classList.add('hidden')
-      detailContent.classList.add('hidden')
-      detailPlaceholder.textContent = `Error loading case: ${err.message}`
-      detailPlaceholder.classList.remove('hidden')
+    } else {
+      showRightPlaceholder()
     }
   }
 
@@ -290,7 +284,7 @@ export async function init(sdk) {
         message: `<p>${esc(message)}</p>`,
         topicId: Number(selectedId)
       })
-      await selectTopic(selectedId)  // reload thread
+      await loadCases()  // refreshes cache including new message, then re-selects
     } catch (err) {
       showErr(replyError, err.message)
     } finally {
