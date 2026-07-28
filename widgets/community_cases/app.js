@@ -16,49 +16,16 @@ export async function init(sdk) {
   sdk.on('destroy', () => {})
 
   // ── Connector calls ───────────────────────────────────────────────────────
-  console.error('[community_cases] SDK keys:', Object.getOwnPropertyNames(Object.getPrototypeOf(sdk)).concat(Object.keys(sdk)))
-  console.error('[community_cases] cookies:', document.cookie)
-  console.error('[community_cases] WidgetServiceSDK available:', typeof window.WidgetServiceSDK)
-  console.error('[community_cases] container attrs:', Array.from(sdk.getContainer?.()?.attributes ?? []).map(a => `${a.name}=${a.value}`))
+  const wsSdk = new window.WidgetServiceSDK()
 
-  // Walk full prototype chain to find callConnector wherever it may live
-  {
-    const allKeys = new Set()
-    let p = sdk
-    while (p && p !== Object.prototype) {
-      Object.getOwnPropertyNames(p).forEach(k => allKeys.add(k))
-      p = Object.getPrototypeOf(p)
-    }
-    console.error('[community_cases] full sdk chain keys:', JSON.stringify([...allKeys]))
-    console.error('[community_cases] callConnector:', typeof sdk.callConnector)
+  async function execConnector(permalink, method, payload = null) {
+    const opts = { permalink, method }
+    if (payload) opts.payload = payload
+    return await wsSdk.connectors.execute(opts)
   }
 
-  async function execConnector(permalink, body = null) {
-    // Try sdk.callConnector if it exists (new SDK)
-    if (typeof sdk.callConnector === 'function') {
-      console.error(`[community_cases] using sdk.callConnector for "${permalink}"`)
-      return await sdk.callConnector(permalink, body ? { body: JSON.stringify(body) } : {})
-    }
-
-    // Fetch proxy — exact pattern from platform docs (no extra headers)
-    console.error(`[community_cases] using fetch proxy for "${permalink}"`)
-    const res = await fetch(`/widget-service/connectors/${permalink}/execute`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body ?? {})
-    })
-    let payload
-    try { payload = await res.json() } catch { payload = null }
-    if (!res.ok) {
-      const detail = payload ? JSON.stringify(payload) : `(no body)`
-      console.error(`[community_cases] connector "${permalink}" → HTTP ${res.status}`, detail)
-      throw new Error(`${res.status}: ${detail}`)
-    }
-    return payload
-  }
-
-  const execGet  = (permalink)       => execConnector(permalink)
-  const execPost = (permalink, body) => execConnector(permalink, body)
+  const execGet  = (permalink)          => execConnector(permalink, 'GET')
+  const execPost = (permalink, payload) => execConnector(permalink, 'POST', payload)
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
