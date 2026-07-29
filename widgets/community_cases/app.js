@@ -18,8 +18,9 @@ export async function init(sdk) {
   // ── Connector calls ───────────────────────────────────────────────────────
   const wsSdk = new window.WidgetServiceSDK()
 
-  const execGet  = (permalink)          => wsSdk.connectors.execute({ permalink, method: 'GET' })
-  const execPost = (permalink, payload) => wsSdk.connectors.execute({ permalink, method: 'POST', payload })
+  const execGet     = (permalink)             => wsSdk.connectors.execute({ permalink, method: 'GET' })
+  const execGetPath = (permalink, pathParams) => wsSdk.connectors.execute({ permalink, method: 'GET', pathParams })
+  const execPost    = (permalink, payload)    => wsSdk.connectors.execute({ permalink, method: 'POST', payload })
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
@@ -142,30 +143,44 @@ export async function init(sdk) {
       ${firstMsg ? `<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${firstMsg}</span></div>` : ''}
     `
 
-    // Comments (replies from mods or the thread messages)
-    const messages = topic.messages?.data ?? topic.messages ?? []
-    if (!messages.length) {
-      commentsEmpty.classList.remove('hidden')
-      commentsList.innerHTML = ''
-    } else {
+    replyText.value = ''
+    hideErr(replyError)
+  }
+
+  // ── Load comments for the selected case ──────────────────────────────────
+  async function loadComments(topicId) {
+    commentsEmpty.classList.add('hidden')
+    commentsList.innerHTML = `<div class="notice">Loading comments…</div>`
+
+    try {
+      const res     = await execGetPath('community-cases-list-replies', { topicId: String(topicId) })
+      const replies = res?.result ?? []
+
+      if (!replies.length) {
+        commentsList.innerHTML = ''
+        commentsEmpty.classList.remove('hidden')
+        return
+      }
+
       commentsEmpty.classList.add('hidden')
-      commentsList.innerHTML = messages.map(m => {
-        const author = m.user?.username ?? m.user?.displayName ?? 'Support'
-        const body   = m.message ?? m.body ?? ''
+      commentsList.innerHTML = replies.map(m => {
+        const author = m.author?.username ?? m.author?.displayName ?? 'Support'
+        const body   = m.content ?? ''
         return `
           <div class="comment">
             <div class="comment-meta">
               <span class="comment-author">${esc(author)}</span>
-              <span class="comment-time">${fmtDate(m.createdAt)}</span>
+              <span class="comment-time">${fmtDate(m.repliedAt)}</span>
             </div>
             <div class="comment-body">${body}</div>
           </div>`
       }).join('')
-    }
+      commentsList.scrollTop = commentsList.scrollHeight
 
-    replyText.value = ''
-    hideErr(replyError)
-    commentsList.scrollTop = commentsList.scrollHeight
+    } catch (err) {
+      commentsList.innerHTML = ''
+      showErr(replyError, err?.message || 'Failed to load comments.')
+    }
   }
 
   // ── Load case list ────────────────────────────────────────────────────────
@@ -225,6 +240,7 @@ export async function init(sdk) {
     const topic = topics.find(t => String(t.id) === String(id))
     if (topic) {
       renderDetail(topic)
+      loadComments(topic.id)
     } else {
       showRightPlaceholder()
     }
@@ -278,7 +294,8 @@ export async function init(sdk) {
         'community-cases-add-reply',
         { content: message, highlight: false }
       )
-      await loadCases()  // refreshes cache including new message, then re-selects
+      replyText.value = ''
+      await loadComments(selectedId)
     } catch (err) {
       showErr(replyError, err.message)
     } finally {
