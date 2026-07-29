@@ -18,9 +18,10 @@ export async function init(sdk) {
   // ── Connector calls ───────────────────────────────────────────────────────
   const wsSdk = new window.WidgetServiceSDK()
 
-  const execGet     = (permalink)             => wsSdk.connectors.execute({ permalink, method: 'GET' })
-  const execGetPath = (permalink, pathParams) => wsSdk.connectors.execute({ permalink, method: 'GET', pathParams })
-  const execPost    = (permalink, payload)    => wsSdk.connectors.execute({ permalink, method: 'POST', payload })
+  const execGet      = (permalink)                       => wsSdk.connectors.execute({ permalink, method: 'GET' })
+  const execGetPath  = (permalink, pathParams)           => wsSdk.connectors.execute({ permalink, method: 'GET', pathParams })
+  const execPost     = (permalink, payload)              => wsSdk.connectors.execute({ permalink, method: 'POST', payload })
+  const execPostPath = (permalink, payload, pathParams)  => wsSdk.connectors.execute({ permalink, method: 'POST', payload, pathParams })
 
   // ── State ─────────────────────────────────────────────────────────────────
   let topics        = []   // cached from list connector
@@ -290,9 +291,10 @@ export async function init(sdk) {
     btnPostComment.textContent = 'Posting…'
 
     try {
-      await execPost(
+      await execPostPath(
         'community-cases-add-reply',
-        { content: message, highlight: false }
+        { content: message, highlight: false },
+        { topicId: String(selectedId) }
       )
       replyText.value = ''
       await loadComments(selectedId)
