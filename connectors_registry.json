@@ -28,7 +28,7 @@
         { "key": "Accept",       "value": "application/json", "overridable": false }
       ],
       "query_parameters": [
-        { "key": "authorId", "value": "{{ user.id }}", "overridable": false }
+        { "key": "authorId", "value": "5", "overridable": false }
       ],
       "authentication": {
         "type": "oauth_client_credentials",
@@ -70,6 +70,9 @@
       "method": "GET",
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
+      ],
+      "path_parameters": [
+        { "key": "topicId" }
       ],
       "query_parameters": [
         { "key": "pageSize", "value": "100", "overridable": false },
