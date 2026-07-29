@@ -96,6 +96,7 @@
       "headers": [
         { "key": "Accept", "value": "application/json", "overridable": false }
       ],
+      "response_body": "{\"DEBUG_user_id\": \"{{ user.id }}\", \"DEBUG_user_email\": \"{{ user.email }}\", \"DEBUG_user_username\": \"{{ user.username }}\", \"DEBUG_user_first_name\": \"{{ user.first_name }}\"}",
       "authentication": {
         "type": "oauth_client_credentials",
         "config": {
